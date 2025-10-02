@@ -7,7 +7,44 @@
 </head>
 
 <body>
-    <div id="app"></div>
+    <div id="List_container">
+        <button class="button" id="add_list">Add List</button>
+    </div>
 </body>
 
 </html>
+
+<!-- 
+Todos are object that are dynamically create using class or constructor 
+Match Trello 
+Each todo as / can have : 
+    -title
+    -descriptin
+    -dueDate
+    -priority
+    -notes
+    -checklist
+        -progress bar
+    - Card color 
+Can create "Project folder" for the todo 
+    - Course
+    - All in one App 
+    - ect...
+When user first open , a default project with todos are put.
+you can move the folder for the todo
+- seperate the JS for the fonctionnalities 
+User interface :
+    1-view all projects
+    2-view all todos in each project( title / due date/ card color )
+    3- click on todo expend it to see more detail , and edit button
+    4- Delete button on todo and Folder , if empty , delete button
+
+Set up local storage :
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+https://www.freecodecamp.org/news/use-local-storage-in-modern-applications/
+
+Create a function to automatically save locally when an action is done 
+
+Make sure it doesnt crash if there is no data in local 
+Data are saved in JSON
+-->

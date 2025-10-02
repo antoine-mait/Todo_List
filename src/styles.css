@@ -1,0 +1,70 @@
+:root {
+  --color-box: #101204;
+  --color-border: #ccc;
+  --color-border-focus: #525355;
+  --color-text: #96999e;
+  --color-background: #242528;
+  --color-background_create_btn: #8fb8f6;
+}
+
+body{
+    background-color: grey;
+}
+
+.list_box{
+    background-color: var(--color-box);
+    height: fit-content;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input, #create_list , #cancel_list, #add_list{
+    background-color: var(--color-background) ;
+    color: var(--color-text);
+    border: 1px solid var(--color-text); 
+    border-radius: 3px;
+    outline: none;
+    padding: 10px;
+}
+
+#add_list{
+    border-radius: 7px;
+    transition: background 0.3s;
+}
+input:focus {
+    border-color: var(--color-border-focus);
+}
+
+#create_list{
+    background-color: var(--color-background_create_btn) ;
+    color: var(--color-box)     
+}
+.creation{
+    margin-top: 10px;
+}
+
+#create_list , #cancel_list{
+   padding: 5px;
+   padding-left: 10px;
+   padding-right: 10px;
+   margin-right: 10px;
+}
+
+#cancel_list{
+    border: none;
+    background-color: var(--color-box);
+    transition: background 0.3s;
+}
+
+#cancel_list:hover {
+    background-color: color-mix(in srgb, var(--color-background) 40%, var(--color-background));;
+}
+#add_list:hover {
+    background-color: color-mix(in srgb, var(--color-background) 90%, var(--color-border));;
+}
+#create_list:hover{
+    background-color: color-mix(in srgb, var(--color-background_create_btn) 50%, var(--color-border));;
+}
