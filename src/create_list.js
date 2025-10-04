@@ -96,7 +96,7 @@ export function createListFromTitle(titleValue) {
 function percentageCompletion(){
     const percentage = document.createElement("div");
     percentage.classList.add("percentage");
-    percentage.innerHTML =  0 + "%";
+    percentage.innerHTML =  0 + "% Done";
 
     console.log(count_todo)
     return percentage
@@ -193,7 +193,7 @@ function percentageCalculation(wrapper){
         const percentageElement = listElement.querySelector(".percentage");
         if (percentageElement) {
             const calculePercentage = Math.round((checked_todo / count_todo) * 100) + "%";
-            percentageElement.innerHTML = calculePercentage;
+            percentageElement.innerHTML = calculePercentage + " Done";
             console.log(calculePercentage)
 
             const list = document.querySelector(".list");
