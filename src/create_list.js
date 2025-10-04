@@ -1,3 +1,5 @@
+import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
+
 const content = document.querySelector("#List_container");
 
 //Use crypto.randomUUID() for unique IDs instead of global counter
@@ -61,6 +63,7 @@ export function createListFromTitle(titleValue) {
     listDiv.classList.add("list");
     const listId = generateId();
     listDiv.id = "list_" + listId;
+    listDiv.draggable = true;
 
     const new_title = document.createElement("input");
     new_title.classList.add("new_title");
@@ -81,11 +84,15 @@ export function createListFromTitle(titleValue) {
 
     listDiv.append(new_title, checkBox);
     content.append(listDiv);
+
+    setupDragAndDrop();
+    setupTodoDragAndDrop(checkBox);
 }
 
 function createTodoLine(checkBox){
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
+    wrapper.draggable = true;
 
     const todoId = generateId();
 
@@ -111,13 +118,17 @@ function createTodoLine(checkBox){
         this.style.height = this.scrollHeight + "px";
     });
 
-    const delete_line_btn = document.createElement("button")
+    const delete_line_btn = document.createElement("button");
     delete_line_btn.classList.add("delete_line_btn");
-    delete_line_btn.innerText = "X";
+    delete_line_btn.innerText = " X ";
     delete_line_btn.classList.add("not-completed");
 
+    const move_line_btn = document.createElement("button");
+    move_line_btn.classList.add("move_line_btn");
+    move_line_btn.innerText = " ⋮ ";
+
     label.appendChild(todoTextarea);
-    wrapper.append(checkbox, label, delete_line_btn);
+    wrapper.append(move_line_btn, checkbox, label, delete_line_btn);
     checkBox.append(wrapper);
 
     return wrapper;
@@ -135,6 +146,7 @@ export function addNewTodoLine(addButton) {
     const checkBox = addButton.parentElement;
     const newLine = createTodoLine(checkBox);
     checkBox.appendChild(newLine);
+    setupTodoDragAndDrop(checkBox);
 }
 
 export function toggleTodoCompletion(checkbox) {
