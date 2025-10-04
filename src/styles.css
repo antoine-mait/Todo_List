@@ -3,7 +3,8 @@
   --color-border: #ccc;
   --color-border-focus: #525355;
   --color-text: #96999e;
-  --color-background: #242528;
+  --color-background: #242826;
+  --color-checked-background: #273d29;
   --color-background_create_btn: #8fb8f6;
   --color-mix90: #343538;
   --color-mix40: #1C1D1A;
@@ -192,6 +193,12 @@ input:focus {
     display: flex;
 }
 
+.percentage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
 /* Mobile devices (phones) */
 @media (max-width: 768px) {
     #List_container {

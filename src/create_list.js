@@ -1,6 +1,8 @@
 import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
 const content = document.querySelector("#List_container");
+let count_todo = 0;
+let checked_todo = 0;
 
 //Use crypto.randomUUID() for unique IDs instead of global counter
 function generateId() {
@@ -82,11 +84,22 @@ export function createListFromTitle(titleValue) {
     // Create the todo line
     createTodoLine(checkBox);
 
-    listDiv.append(new_title, checkBox);
+    const percentage = percentageCompletion();
+
+    listDiv.append(new_title, percentage, checkBox );
     content.append(listDiv);
 
     setupDragAndDrop();
     setupTodoDragAndDrop(checkBox);
+}
+
+function percentageCompletion(){
+    const percentage = document.createElement("div");
+    percentage.classList.add("percentage");
+    percentage.innerHTML =  0 + "%";
+
+    console.log(count_todo)
+    return percentage
 }
 
 function createTodoLine(checkBox){
@@ -130,6 +143,9 @@ function createTodoLine(checkBox){
     label.appendChild(todoTextarea);
     wrapper.append(move_line_btn, checkbox, label, delete_line_btn);
     checkBox.append(wrapper);
+    count_todo++;
+
+    percentageCalculation(checkBox);
 
     return wrapper;
 }
@@ -155,14 +171,40 @@ export function toggleTodoCompletion(checkbox) {
     const deleteBtn = wrapper.querySelector(".delete_line_btn");
     
     if (checkbox.checked) {
+        checked_todo++;
+        percentageCalculation(wrapper);
         textarea.classList.add("completed");
         textarea.classList.remove("not-completed");
         deleteBtn.classList.add("completed");
         deleteBtn.classList.remove("not-completed");
     } else {
+        checked_todo--;
+        percentageCalculation(wrapper);
         textarea.classList.remove("completed");
         textarea.classList.add("not-completed");
         deleteBtn.classList.remove("completed");
         deleteBtn.classList.add("not-completed");
     }
+}
+
+function percentageCalculation(wrapper){
+    const listElement = wrapper.closest(".list");
+    if (listElement) {
+        const percentageElement = listElement.querySelector(".percentage");
+        if (percentageElement) {
+            const calculePercentage = Math.round((checked_todo / count_todo) * 100) + "%";
+            percentageElement.innerHTML = calculePercentage;
+            console.log(calculePercentage)
+
+            const list = document.querySelector(".list");
+
+            if (calculePercentage == 100 + "%"){
+                list.style.backgroundColor = "var(--color-checked-background)";
+            } else {
+                list.style.backgroundColor = "var(--color-background)";
+            }
+
+        }
+    }
+    
 }
