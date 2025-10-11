@@ -40,6 +40,9 @@ export default function createList() {
     choice_div.append(create_list, cancel_list_btn);
     list_box.append(input_title, choice_div);
     content.append(list_box);
+
+    document.getElementById("title").focus();
+
 }
 
 export function createAddListButton() {
@@ -75,6 +78,36 @@ export function createListFromTitle(titleValue) {
         this.select();
     });
 
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("dropdown"); 
+    
+    const option_btn = document.createElement("button");
+    option_btn.classList.add("option_btn");
+    option_btn.innerHTML = " ⋮ ";
+
+    const dropdown_menu = document.createElement("div");
+    dropdown_menu.classList.add("dropdown_content");
+    dropdown_menu.id = "dropdown_menu";
+
+    const del_option = document.createElement("a");
+    del_option.classList.add("delete");
+    del_option.innerHTML = "Delete";
+
+    const rename_option = document.createElement("a");
+    rename_option.classList.add("rename");
+    rename_option.innerHTML = "Rename";
+
+    const duplicate_option = document.createElement("a");
+    duplicate_option.classList.add("duplicate");
+    duplicate_option.innerHTML = "Duplicate";
+
+    const add_to_folder_option = document.createElement("a");
+    add_to_folder_option.classList.add("add_to_folder");
+    add_to_folder_option.innerHTML = "Add to a folder";
+
+    const title_box = document.createElement("div");
+    title_box.classList.add("title_box");
+
     const checkBox = document.createElement("div");
     checkBox.classList.add("checkBox");
 
@@ -85,8 +118,11 @@ export function createListFromTitle(titleValue) {
     createTodoLine(checkBox);
 
     const percentage = percentageCompletion();
-
-    listDiv.append(new_title, percentage, checkBox );
+    
+    dropdown_menu.append(del_option, rename_option,duplicate_option,add_to_folder_option)
+    dropdown.append(option_btn, dropdown_menu);
+    title_box.append(new_title, dropdown);
+    listDiv.append(title_box, percentage, checkBox );
     content.append(listDiv);
 
     setupDragAndDrop();
@@ -208,3 +244,4 @@ function percentageCalculation(wrapper){
     }
     
 }
+

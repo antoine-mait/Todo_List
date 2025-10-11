@@ -7,8 +7,13 @@ import createList, {
   toggleTodoCompletion
 } from "./create_list.js";
 
-import { setupTodoDragAndDrop }
-  from "./draggable.js";
+document.querySelector("#List_container").addEventListener("keypress", (e) => {
+  // Check if Enter key is pressed on the title input
+  if (e.key === "Enter" && e.target.id === "title") {
+    e.preventDefault();
+    document.querySelector("#create_list").click();
+  }
+});
 
 document.querySelector("#List_container").addEventListener("click", (e) => {
 
@@ -16,6 +21,7 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
   if (e.target && e.target.id === "add_list") {
     createList();
     return;
+    
   }
 
   // "Create list" button - validates and creates the actual list
@@ -59,5 +65,50 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
     addNewTodoLine(e.target);
     return;
   }
+
+  // Option button dropDown menu
+  const dropdown_content = document.querySelector(".dropdown_content")
+  
+  if (e.target.classList.contains("option_btn")){
+    dropdown_content.classList.remove("hide")
+    dropdown_content.classList.add("show")
+    return
+  }
+
+  // Duplicate list
+  if (e.target.classList.contains("duplicate")) {
+    console.log("duplicate list")
+    return;
+  }
+
+  // Rename list
+  if (e.target.classList.contains("rename")) {
+    console.log("Rename list")
+    return;
+  }
+
+  // Delete list
+  if (e.target.classList.contains("delete")) {
+    console.log("Delete list")
+    return;
+  }
+
+    // Add to a folder list
+  if (e.target.classList.contains("add_to_folder")) {
+    console.log("Add to a folder list")
+    return;
+  }
+
 });
 
+// Hide dropDown menu by clicking anywhere
+
+document.addEventListener("click", (e) => {
+  const dropdown_content = document.querySelector(".dropdown_content")
+
+  if (dropdown_content && !e.target.classList.contains("option_btn") && !e.target.closest(".dropdown_content")){
+    dropdown_content.classList.remove("hide")
+    dropdown_content.classList.add("hide")
+    return
+  }
+});
