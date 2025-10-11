@@ -7,6 +7,13 @@ import createList, {
   toggleTodoCompletion
 } from "./create_list.js";
 
+import {
+  deleteOption,
+  renameOption,
+  addToFolderOption,
+  duplicateOption,
+} from"./dropDownMenu.js";
+
 document.querySelector("#List_container").addEventListener("keypress", (e) => {
   // Check if Enter key is pressed on the title input
   if (e.key === "Enter" && e.target.id === "title") {
@@ -67,9 +74,9 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
   }
 
   // Option button dropDown menu
-  const dropdown_content = document.querySelector(".dropdown_content")
   
   if (e.target.classList.contains("option_btn")){
+    const dropdown_content = e.target.closest(".list").querySelector(".dropdown_content")
     dropdown_content.classList.remove("hide")
     dropdown_content.classList.add("show")
     return
@@ -77,32 +84,37 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
 
   // Duplicate list
   if (e.target.classList.contains("duplicate")) {
-    console.log("duplicate list")
-    return;
-  }
+    const list = e.target.closest(".list");
+    const container = e.target.closest("#List_container");
+    const dropdown_content = list.querySelector(".dropdown_content")
 
-  // Rename list
-  if (e.target.classList.contains("rename")) {
-    console.log("Rename list")
+    dropdown_content.classList.add("hide");
+    dropdown_content.classList.remove("show");
+    duplicateOption(list , container);
     return;
   }
 
   // Delete list
   if (e.target.classList.contains("delete")) {
-    console.log("Delete list")
+    const list = e.target.closest(".list");
+    deleteOption(list);
     return;
   }
 
     // Add to a folder list
   if (e.target.classList.contains("add_to_folder")) {
-    console.log("Add to a folder list")
+    const list = e.target.closest(".list");
+    const dropdown_content = list.querySelector(".dropdown_content")
+
+    addToFolderOption(list);
+    dropdown_content.classList.add("hide");
+    dropdown_content.classList.remove("show");
     return;
   }
 
 });
 
 // Hide dropDown menu by clicking anywhere
-
 document.addEventListener("click", (e) => {
   const dropdown_content = document.querySelector(".dropdown_content")
 

@@ -5,7 +5,7 @@ let count_todo = 0;
 let checked_todo = 0;
 
 //Use crypto.randomUUID() for unique IDs instead of global counter
-function generateId() {
+export function generateId() {
     return crypto.randomUUID();
 }
 
@@ -87,15 +87,11 @@ export function createListFromTitle(titleValue) {
 
     const dropdown_menu = document.createElement("div");
     dropdown_menu.classList.add("dropdown_content");
-    dropdown_menu.id = "dropdown_menu";
+    dropdown_menu.id = "dropdown_menu_" + generateId;
 
     const del_option = document.createElement("a");
     del_option.classList.add("delete");
     del_option.innerHTML = "Delete";
-
-    const rename_option = document.createElement("a");
-    rename_option.classList.add("rename");
-    rename_option.innerHTML = "Rename";
 
     const duplicate_option = document.createElement("a");
     duplicate_option.classList.add("duplicate");
@@ -119,7 +115,7 @@ export function createListFromTitle(titleValue) {
 
     const percentage = percentageCompletion();
     
-    dropdown_menu.append(del_option, rename_option,duplicate_option,add_to_folder_option)
+    dropdown_menu.append(del_option,duplicate_option,add_to_folder_option)
     dropdown.append(option_btn, dropdown_menu);
     title_box.append(new_title, dropdown);
     listDiv.append(title_box, percentage, checkBox );
