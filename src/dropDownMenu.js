@@ -4,16 +4,15 @@ let count = 1
 import {generateId} from "./create_list"
 import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
+
 export function deleteOption(list){
     list.remove();
     console.log("Delete option");
 }
-export function addToFolderOption(){
-    // even listener click 
-    // create dropdown menu with all Folder names
-    document.addEventListener("click", (e) => {
-        const dropDown = dropMenuBtn()
-    })
+export function addToFolderOption(parent){
+    const title = parent.querySelector(".new_title")
+    console.log(title.value);
+    
 }
 
 export function duplicateOption(list , container){

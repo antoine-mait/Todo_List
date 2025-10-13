@@ -26,11 +26,6 @@ export function sideMenu(){
     // Append both to the container, not dropdown inside input
     sideMenuToDoFolder.append(dropDown, folderTitle);
 
-    listNameInFolder(1);
-    listNameInFolder(2);
-    listNameInFolder(3);
-    listNameInFolder(4);
-    
     const listTodos = document.querySelector(".listTodos");
 
     if (listTodos) {
@@ -40,7 +35,7 @@ export function sideMenu(){
     }
 }
 
-function listNameInFolder(name){
+export function listNameInFolder(name){
     const todoLine = document.createElement("li");
     todoLine.classList.add("listName");
 
@@ -52,7 +47,7 @@ function listNameInFolder(name){
 
     const todoText = document.createElement("input");
     todoText.classList.add("todoText")
-    todoText.value = "To do List " + name ;
+    todoText.value = name ;
     todoText.id = "TodoName_" + generateId();
 
     todoLine.append(move_line_btn, todoText);

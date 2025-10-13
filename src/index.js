@@ -4,19 +4,21 @@ import createList, {
   createAddListButton,
   createListFromTitle,
   addNewTodoLine,
-  toggleTodoCompletion
+  toggleTodoCompletion,
+  dropFolderMenuBtn
+
 } from "./create_list.js";
 
 import {
   deleteOption,
   renameOption,
   addToFolderOption,
-  duplicateOption,
+  duplicateOption
 } from "./dropDownMenu.js";
 
 import {
-  sideMenu
-
+  sideMenu,
+  listNameInFolder
 } from "./sideMenu.js";
 
 
@@ -131,14 +133,25 @@ document.addEventListener("click", (e) => {
     if (parent) {
       const dropdown_content = parent.querySelector(".dropdown_content");
       if (dropdown_content) {
-        dropdown_content.classList.add("hide");
+       dropdown_content.classList.add("hide");
         dropdown_content.classList.remove("show");
       }
-      addToFolderOption(parent);
+      dropFolderMenuBtn(parent);
     }
     return;
   }
 
+  if (e.target.classList.contains("folder-option")) {
+     const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
+      dropdown_contents.forEach(dropdown => {
+      dropdown.classList.remove("show");
+      dropdown.classList.add("hide");
+    });
+    const list = e.target.closest(".list");
+    const title = list.querySelector(".new_title")
+    console.log(title.value)
+    listNameInFolder(title.value);
+  }
 });
 
 // Hide dropDown menu by clicking anywhere
@@ -149,7 +162,15 @@ document.addEventListener("click", (e) => {
       dropdown.classList.remove("show");
       dropdown.classList.add("hide");
     });
-  }
+  if (!e.target.classList.contains("folder-option") && !e.target.closest(".dropdown_content")) {
+    const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
+    dropdown_contents.forEach(dropdown => {
+      dropdown.classList.remove("show");
+      dropdown.classList.add("hide");
+    });
+  }}
+
 });
+
 
 sideMenu()

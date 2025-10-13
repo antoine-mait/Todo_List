@@ -325,7 +325,7 @@ input:focus {
     display: inline-block;
 }
 
-.dropdown_content {
+.dropdown_content , .dropdownFoldersNames{
     display: none;
     position: absolute;
     background-color: var(--color-border-focus);
@@ -335,7 +335,7 @@ input:focus {
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
 }
 
-.dropdown_content a {
+.dropdown_content a,.dropdownFoldersNames a {
     color: var(--color-text2);
     padding: 7px;
     text-decoration: none;

@@ -148,6 +148,41 @@ export function dropMenuBtn(options = {}){
     return dropdown;
 }
 
+export function dropFolderMenuBtn(parent){
+    const dropdown = parent.querySelector(".dropdown")
+
+    let dropdownFoldersNames = dropdown.querySelector(".dropdownFoldersNames");
+    
+     if (!dropdownFoldersNames) {
+        // Create it only once
+        dropdownFoldersNames = document.createElement("div");
+        dropdownFoldersNames.classList.add("dropdownFoldersNames");
+        dropdown.append(dropdownFoldersNames);
+    }   
+    
+    dropdownFoldersNames.innerHTML = "";
+
+    const folderNames = document.querySelectorAll(".folderLists");
+
+    for (let folder of folderNames) {
+        const folderLink = document.createElement("a");
+        folderLink.innerHTML = folder.value;
+        folderLink.classList.add("folder-option");
+        dropdownFoldersNames.append(folderLink);
+    }
+    
+    // Toggle show/hide
+    if (dropdownFoldersNames.classList.contains("show")) {
+        dropdownFoldersNames.classList.remove("show");
+        dropdownFoldersNames.classList.add("hide");
+    } else {
+        dropdownFoldersNames.classList.remove("hide");
+        dropdownFoldersNames.classList.add("show");
+    }
+    
+    return dropdown;
+}
+
 function percentageCompletion(){
     const percentage = document.createElement("div");
     percentage.classList.add("percentage");
