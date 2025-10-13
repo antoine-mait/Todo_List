@@ -9,7 +9,11 @@ export function deleteOption(list){
     console.log("Delete option");
 }
 export function addToFolderOption(){
-    console.log("Add to folder option");
+    // even listener click 
+    // create dropdown menu with all Folder names
+    document.addEventListener("click", (e) => {
+        const dropDown = dropMenuBtn()
+    })
 }
 
 export function duplicateOption(list , container){

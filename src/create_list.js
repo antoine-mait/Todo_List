@@ -78,28 +78,7 @@ export function createListFromTitle(titleValue) {
         this.select();
     });
 
-    const dropdown = document.createElement("div");
-    dropdown.classList.add("dropdown"); 
-    
-    const option_btn = document.createElement("button");
-    option_btn.classList.add("option_btn");
-    option_btn.innerHTML = " ⋮ ";
-
-    const dropdown_menu = document.createElement("div");
-    dropdown_menu.classList.add("dropdown_content");
-    dropdown_menu.id = "dropdown_menu_" + generateId;
-
-    const del_option = document.createElement("a");
-    del_option.classList.add("delete");
-    del_option.innerHTML = "Delete";
-
-    const duplicate_option = document.createElement("a");
-    duplicate_option.classList.add("duplicate");
-    duplicate_option.innerHTML = "Duplicate";
-
-    const add_to_folder_option = document.createElement("a");
-    add_to_folder_option.classList.add("add_to_folder");
-    add_to_folder_option.innerHTML = "Add to a folder";
+    const dropdown = dropMenuBtn();
 
     const title_box = document.createElement("div");
     title_box.classList.add("title_box");
@@ -115,14 +94,58 @@ export function createListFromTitle(titleValue) {
 
     const percentage = percentageCompletion();
     
-    dropdown_menu.append(del_option,duplicate_option,add_to_folder_option)
-    dropdown.append(option_btn, dropdown_menu);
     title_box.append(new_title, dropdown);
     listDiv.append(title_box, percentage, checkBox );
     content.append(listDiv);
 
     setupDragAndDrop();
     setupTodoDragAndDrop(checkBox);
+}
+
+export function dropMenuBtn(options = {}){
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("dropdown"); 
+    
+    const option_btn = document.createElement("button");
+    option_btn.classList.add("option_btn");
+    option_btn.innerHTML = " ⋮ ";
+
+    const dropdown_menu = document.createElement("div");
+    dropdown_menu.classList.add("dropdown_content");
+
+    const del_option = document.createElement("a");
+    del_option.classList.add("delete");
+    del_option.innerHTML = "Delete";
+
+    const duplicate_option = document.createElement("a");
+    duplicate_option.classList.add("duplicate");
+    duplicate_option.innerHTML = "Duplicate";
+
+    // Always append delete first
+    dropdown_menu.append(del_option);
+    
+    // Conditionally append duplicate
+    if (options.showDuplicate !== false) {
+        dropdown_menu.append(duplicate_option);
+    }
+    
+    // Conditionally create and append add_to_folder
+    if (options.showAddaFolder !== false) {
+        const add_to_folder_option = document.createElement("a");
+        add_to_folder_option.classList.add("add_to_folder");
+        add_to_folder_option.innerHTML = "Add to a folder";
+        dropdown_menu.append(add_to_folder_option);
+    } else {
+        // Create "Add a folder" option when showAddaFolder is false
+        const add_folder_option = document.createElement("a");
+        add_folder_option.classList.add("add_folder");
+        add_folder_option.innerHTML = "Add a folder";
+        dropdown_menu.append(add_folder_option);
+    }
+    
+    dropdown.append(option_btn, dropdown_menu);
+    
+    return dropdown;
 }
 
 function percentageCompletion(){
@@ -163,14 +186,9 @@ function createTodoLine(checkBox){
         this.style.height = this.scrollHeight + "px";
     });
 
-    const delete_line_btn = document.createElement("button");
-    delete_line_btn.classList.add("delete_line_btn");
-    delete_line_btn.innerText = " X ";
-    delete_line_btn.classList.add("not-completed");
+    const delete_line_btn = deleteLineBtn();
 
-    const move_line_btn = document.createElement("button");
-    move_line_btn.classList.add("move_line_btn");
-    move_line_btn.innerText = " ⋮ ";
+    const move_line_btn = moveLineBtn();
 
     label.appendChild(todoTextarea);
     wrapper.append(move_line_btn, checkbox, label, delete_line_btn);
@@ -182,6 +200,20 @@ function createTodoLine(checkBox){
     return wrapper;
 }
 
+export function moveLineBtn(){
+    const move_line_btn = document.createElement("button");
+    move_line_btn.classList.add("move_line_btn");
+    move_line_btn.innerText = " ⋮ ";
+    return move_line_btn
+}
+
+export function deleteLineBtn(){
+    const delete_line_btn = document.createElement("button");
+    delete_line_btn.classList.add("delete_line_btn");
+    delete_line_btn.innerText = " X ";
+    delete_line_btn.classList.add("not-completed");
+    return delete_line_btn
+}
 function createAddTodoButton(checkBox){
     const addCheckLine = document.createElement("button");
     addCheckLine.classList.add("addCheckLine");

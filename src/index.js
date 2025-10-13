@@ -12,7 +12,14 @@ import {
   renameOption,
   addToFolderOption,
   duplicateOption,
-} from"./dropDownMenu.js";
+} from "./dropDownMenu.js";
+
+import {
+  sideMenu
+
+} from "./sideMenu.js";
+
+
 
 document.querySelector("#List_container").addEventListener("keypress", (e) => {
   // Check if Enter key is pressed on the title input
@@ -22,13 +29,17 @@ document.querySelector("#List_container").addEventListener("keypress", (e) => {
   }
 });
 
-document.querySelector("#List_container").addEventListener("click", (e) => {
+// Helper function to find the parent container (either .list or .folderTitle)
+function getDropdownParent(element) {
+  return element.closest(".list") || element.closest(".folderTitle");
+}
+
+document.addEventListener("click", (e) => {
 
   // "Add List" button - shows the list creation box
   if (e.target && e.target.id === "add_list") {
     createList();
     return;
-    
   }
 
   // "Create list" button - validates and creates the actual list
@@ -74,41 +85,57 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
   }
 
   // Option button dropDown menu
-  
-  if (e.target.classList.contains("option_btn")){
-    const dropdown_content = e.target.closest(".list").querySelector(".dropdown_content")
-    dropdown_content.classList.remove("hide")
-    dropdown_content.classList.add("show")
-    return
+  if (e.target.classList.contains("option_btn")) {
+    const parent = getDropdownParent(e.target);
+    if (parent) {
+      const dropdown_content = parent.querySelector(".dropdown_content");
+      if (dropdown_content) {
+        dropdown_content.classList.remove("hide");
+        dropdown_content.classList.add("show");
+      }
+    }
+    return;
   }
 
   // Duplicate list
   if (e.target.classList.contains("duplicate")) {
-    const list = e.target.closest(".list");
-    const container = e.target.closest("#List_container");
-    const dropdown_content = list.querySelector(".dropdown_content")
+    const parent = getDropdownParent(e.target);
+    if (parent) {
+      const dropdown_content = parent.querySelector(".dropdown_content");
+      if (dropdown_content) {
+        dropdown_content.classList.add("hide");
+        dropdown_content.classList.remove("show");
+      }
 
-    dropdown_content.classList.add("hide");
-    dropdown_content.classList.remove("show");
-    duplicateOption(list , container);
+      // Only duplicate if it's a list (not a folder)
+      if (parent.classList.contains("list")) {
+        const container = e.target.closest("#List_container");
+        duplicateOption(parent, container);
+      }
+    }
     return;
   }
 
-  // Delete list
+  // Delete list or folder
   if (e.target.classList.contains("delete")) {
-    const list = e.target.closest(".list");
-    deleteOption(list);
+    const parent = getDropdownParent(e.target);
+    if (parent) {
+      deleteOption(parent);
+    }
     return;
   }
 
-    // Add to a folder list
+  // Add to a folder
   if (e.target.classList.contains("add_to_folder")) {
-    const list = e.target.closest(".list");
-    const dropdown_content = list.querySelector(".dropdown_content")
-
-    addToFolderOption(list);
-    dropdown_content.classList.add("hide");
-    dropdown_content.classList.remove("show");
+    const parent = getDropdownParent(e.target);
+    if (parent) {
+      const dropdown_content = parent.querySelector(".dropdown_content");
+      if (dropdown_content) {
+        dropdown_content.classList.add("hide");
+        dropdown_content.classList.remove("show");
+      }
+      addToFolderOption(parent);
+    }
     return;
   }
 
@@ -116,11 +143,13 @@ document.querySelector("#List_container").addEventListener("click", (e) => {
 
 // Hide dropDown menu by clicking anywhere
 document.addEventListener("click", (e) => {
-  const dropdown_content = document.querySelector(".dropdown_content")
-
-  if (dropdown_content && !e.target.classList.contains("option_btn") && !e.target.closest(".dropdown_content")){
-    dropdown_content.classList.remove("hide")
-    dropdown_content.classList.add("hide")
-    return
+  if (!e.target.classList.contains("option_btn") && !e.target.closest(".dropdown_content")) {
+    const dropdown_contents = document.querySelectorAll(".dropdown_content.show");
+    dropdown_contents.forEach(dropdown => {
+      dropdown.classList.remove("show");
+      dropdown.classList.add("hide");
+    });
   }
 });
+
+sideMenu()

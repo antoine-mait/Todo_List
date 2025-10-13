@@ -210,3 +210,99 @@ export function setupTodoDragAndDrop(checkBox) {
         });
     });
 }
+
+export function sideMenuDragAndDrop(listTodos) {
+    const listNames = listTodos.querySelectorAll(".listName");
+    let draggedItem = null;
+    let touchData = { startY: 0, currentElement: null, isDragging: false };
+
+    listNames.forEach(item => {
+        const newItem = item.cloneNode(true);
+        item.parentNode.replaceChild(newItem, item);
+
+        newItem.draggable = false;
+        
+        const moveBtn = newItem.querySelector(".move_line_btn");
+        
+        // Desktop: Make move button initiate drag
+        moveBtn.addEventListener("mousedown", () => {
+            newItem.draggable = true;
+        });
+        
+        moveBtn.addEventListener("mouseup", () => {
+            newItem.draggable = false;
+        });
+
+        // Desktop drag events
+        newItem.addEventListener("dragstart", (e) => {
+            draggedItem = newItem;
+            newItem.classList.add("dragging");
+        });
+
+        newItem.addEventListener("dragend", () => {
+            newItem.classList.remove("dragging");
+            newItem.draggable = false;
+        });
+
+        newItem.addEventListener("dragover", (e) => {
+            e.preventDefault();
+        });
+
+        newItem.addEventListener("drop", function (e) {
+            e.preventDefault();
+            if (draggedItem !== this) {
+                const allItems = Array.from(listTodos.querySelectorAll(".listName"));
+                const draggedIndex = allItems.indexOf(draggedItem);
+                const targetIndex = allItems.indexOf(this);
+
+                if (draggedIndex < targetIndex) {
+                    this.parentNode.insertBefore(draggedItem, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedItem, this);
+                }
+            }
+        });
+
+        // Mobile: Touch events on move button only
+        moveBtn.addEventListener("touchstart", (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            draggedItem = newItem;
+            touchData.currentElement = newItem;
+            touchData.isDragging = true;
+            touchData.startY = e.touches[0].clientY;
+            newItem.classList.add("dragging");
+        });
+
+        moveBtn.addEventListener("touchmove", (e) => {
+            if (!touchData.isDragging || touchData.currentElement !== newItem) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const touch = e.touches[0];
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const itemBelow = elementBelow?.closest(".listName");
+
+            if (itemBelow && itemBelow !== draggedItem && itemBelow.parentElement === listTodos) {
+                const allItems = Array.from(listTodos.querySelectorAll(".listName"));
+                const draggedIndex = allItems.indexOf(draggedItem);
+                const targetIndex = allItems.indexOf(itemBelow);
+
+                if (draggedIndex < targetIndex) {
+                    itemBelow.parentNode.insertBefore(draggedItem, itemBelow.nextSibling);
+                } else {
+                    itemBelow.parentNode.insertBefore(draggedItem, itemBelow);
+                }
+            }
+        });
+
+        moveBtn.addEventListener("touchend", (e) => {
+            e.stopPropagation();
+            newItem.classList.remove("dragging");
+            draggedItem = null;
+            touchData.currentElement = null;
+            touchData.isDragging = false;
+        });
+    });
+}
