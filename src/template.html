@@ -14,16 +14,29 @@
         <a class="connection">Connection</a>
     </div>
     <div class="sideMenu">
+        <!-- To Do App -->
         <div class="toDoApp">
             <h2 class="subMenu">To Do folders</h2>
             <button class="button" id ="AddAFolder">Add a folder</button>
-            <div class="folders">
+            <div class="folders show">
                 <div class="folderTitle">
+                    <!--
+                    Change where i click from the button to the text to draganddrop in the side menu
+                    The button become like the main folder button to delete from the folder
+                    -->
                 </div>
             </div>
         </div>
+        <!-- Calorie Count -->
+        <div class="KCalTrack">
+            <h2 class="subMenu">KCal Tracking</h2>
+            <!-- <div class="folders">
+                <div class="folderTitle">
+                </div>
+            </div> -->
+        </div>
     </div>
-    <div id="List_container">
+    <div id="List_container" class="show">
         <button class="button" id="add_list">Add List</button>
     </div>
 </body>
@@ -31,24 +44,11 @@
 </html>
 
 <!-- 
-Todos are object that are dynamically create using class or constructor 
-Match Trello 
-Each todo as / can have : 
-    -description
-    -priority ( category , set color to the background of the card )
 
-Can create "Project folder" for the todo 
-    - Course
-    - All in one App 
-    - ect...
 When user first open , a default project with todos are put.
-you can move the folder for the todo
-- seperate the JS for the fonctionnalities 
 User interface :
     1-view all projects
     2-view all todos in each project( title / due date/ card color )
-    3- click on todo expend it to see more detail , and edit button
-    4- Delete button on todo and Folder , if empty , delete button
 
 Set up local storage :
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API

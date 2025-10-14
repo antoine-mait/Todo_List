@@ -1,15 +1,13 @@
 import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
 const content = document.querySelector("#List_container");
-let count_todo = 0;
-let checked_todo = 0;
 
 //Use crypto.randomUUID() for unique IDs instead of global counter
 export function generateId() {
     return crypto.randomUUID();
 }
 
-export default function createList() {
+export default function createList(name) {
 
     const addList_btn = document.querySelector("#add_list");
     addList_btn.remove();
@@ -177,16 +175,14 @@ export function dropFolderMenuBtn(parent){
     return dropdown;
 }
 
-function percentageCompletion(){
+function percentageCompletion(listElement){
     const percentage = document.createElement("div");
     percentage.classList.add("percentage");
-    percentage.innerHTML =  0 + "% Done";
-
-    console.log(count_todo)
-    return percentage
+    percentage.innerHTML = "0% Done";
+    return percentage;
 }
 
-function createTodoLine(checkBox){
+export function createTodoLine(checkBox){
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
     wrapper.draggable = true;
@@ -222,9 +218,8 @@ function createTodoLine(checkBox){
     label.appendChild(todoTextarea);
     wrapper.append(move_line_btn, checkbox, label, delete_line_btn);
     checkBox.append(wrapper);
-    count_todo++;
 
-    percentageCalculation(checkBox);
+    percentageCalculation(wrapper);
 
     return wrapper;
 }
@@ -264,20 +259,19 @@ export function toggleTodoCompletion(checkbox) {
     const deleteBtn = wrapper.querySelector(".delete_line_btn");
     
     if (checkbox.checked) {
-        checked_todo++;
         percentageCalculation(wrapper);
         textarea.classList.add("completed");
         textarea.classList.remove("not-completed");
         deleteBtn.classList.add("completed");
         deleteBtn.classList.remove("not-completed");
     } else {
-        checked_todo--;
         percentageCalculation(wrapper);
         textarea.classList.remove("completed");
         textarea.classList.add("not-completed");
         deleteBtn.classList.remove("completed");
         deleteBtn.classList.add("not-completed");
     }
+    percentageCalculation(wrapper);
 }
 
 function percentageCalculation(wrapper){
@@ -285,18 +279,26 @@ function percentageCalculation(wrapper){
     if (listElement) {
         const percentageElement = listElement.querySelector(".percentage");
         if (percentageElement) {
-            const calculePercentage = Math.round((checked_todo / count_todo) * 100) + "%";
-            percentageElement.innerHTML = calculePercentage + " Done";
-            console.log(calculePercentage)
-
-            const list = document.querySelector(".list");
-
-            if (calculePercentage == 100 + "%"){
-                list.style.backgroundColor = "var(--color-checked-background)";
-            } else {
-                list.style.backgroundColor = "var(--color-background)";
+            // Count all todos in THIS list only
+            const allTodos = listElement.querySelectorAll(".todo-checkbox");
+            const checkedTodos = listElement.querySelectorAll(".todo-checkbox:checked");
+            
+            const totalCount = allTodos.length;
+            const checkedCount = checkedTodos.length;
+            
+            let calculePercentage = 0;
+            if (totalCount > 0) {
+                calculePercentage = Math.round((checkedCount / totalCount) * 100);
             }
+            
+            percentageElement.innerHTML = calculePercentage + "% Done";
+            console.log("List:", listElement.id, "- Percentage:", calculePercentage);
 
+            if (calculePercentage === 100 && totalCount > 0){
+                listElement.style.backgroundColor = "var(--color-checked-background)";
+            } else {
+                listElement.style.backgroundColor = "var(--color-background)";
+            }
         }
     }
     

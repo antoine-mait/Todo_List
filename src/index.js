@@ -5,8 +5,8 @@ import createList, {
   createListFromTitle,
   addNewTodoLine,
   toggleTodoCompletion,
-  dropFolderMenuBtn
-
+  dropFolderMenuBtn,
+  createTodoLine
 } from "./create_list.js";
 
 import {
@@ -21,9 +21,86 @@ import {
   listNameInFolder
 } from "./sideMenu.js";
 
+const listContainer = document.querySelector("#List_container")
+// When customer open the page , it's already setpUp
 
+// Initialize with default data on first load
+// Initialize with default data on first load
+function initializeDefaultData() {
+  // Check if this is the first time loading (you can expand this later for localStorage)
+  const hasExistingLists = document.querySelectorAll('.list').length > 0;
+  
+  if (!hasExistingLists) {
+    // Remove the initial "Add List" button
+    const initialAddBtn = document.querySelector("#add_list");
+    if (initialAddBtn) {
+      initialAddBtn.remove();
+    }
+    
+    // Create default folders in side menu
+    sideMenu(); // Creates "Folder 1"
+    sideMenu(); // Creates "Folder 2"
+    
+    // Create a sample list with todos
+    createListFromTitle("Shopping List");
+    
+    // Wait a tick for DOM to update, then add todos
+    setTimeout(() => {
+      const firstList = document.querySelector('.list');
+      if (firstList) {
+        const checkBox = firstList.querySelector('.checkBox');
+        
+        // Add multiple todos
+        const todos = [
+          { text: "Buy milk", checked: true },
+          { text: "Get bread", checked: true },
+          { text: "Pick up vegetables", checked: false },
+          { text: "Buy coffee", checked: false }
+        ];
+        
+        todos.forEach((todo, index) => {
+          const wrapper = createTodoLine(checkBox);
+          const textarea = wrapper.querySelector('.todo-text');
+          const checkbox = wrapper.querySelector('.todo-checkbox');
+          
+          textarea.value = todo.text;
+          textarea.style.height = "auto";
+          textarea.style.height = textarea.scrollHeight + "px";
+          
+          if (todo.checked) {
+            checkbox.checked = true;
+            toggleTodoCompletion(checkbox);
+          }
+        });
+      }
+    }, 100);
+    
+    // Create another list
+    setTimeout(() => {
+      createListFromTitle("Work Tasks");
+      
+      setTimeout(() => {
+        const lists = document.querySelectorAll('.list');
+        const secondList = lists[1];
+        if (secondList) {
+          const checkBox = secondList.querySelector('.checkBox');
+          const wrapper = createTodoLine(checkBox);
+          const textarea = wrapper.querySelector('.todo-text');
+          textarea.value = "Finish project report";
+          textarea.style.height = "auto";
+          textarea.style.height = textarea.scrollHeight + "px";
+        }
+        
+        // Now add the "Add List" button at the very end
+        createAddListButton();
+      }, 150);
+    }, 200);
+  }
+}
+// Call initialization when DOM is ready
+initializeDefaultData();
 
-document.querySelector("#List_container").addEventListener("keypress", (e) => {
+listContainer.addEventListener("keypress", (e) => {
   // Check if Enter key is pressed on the title input
   if (e.key === "Enter" && e.target.id === "title") {
     e.preventDefault();
@@ -159,8 +236,30 @@ document.addEventListener("click", (e) => {
   if (e.target.id == "AddAFolder"){
     sideMenu()
   }
+
+  // To do Folders show 
+  if (e.target.classList.contains("subMenu")){
+    const folders = document.querySelector(".folders");
+    const listContainer = document.getElementById("List_container");
+
+    if (folders.classList.contains("show")){
+      listContainer.classList.remove("show");
+      listContainer.classList.add("hide");
+
+      folders.classList.remove("show");
+      folders.classList.add("hide");
+    } else {
+      listContainer.classList.remove("hide");
+      listContainer.classList.add("show");
+      
+      folders.classList.remove("hide");
+      folders.classList.add("show");
+    }
+
+  }
 });
 
+  
 // Hide dropDown menu by clicking anywhere
 document.addEventListener("click", (e) => {
   if (!e.target.classList.contains("option_btn") && !e.target.closest(".dropdown_content")) {

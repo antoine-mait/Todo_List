@@ -76,7 +76,14 @@ input:focus {
     color: var(--color-text2);
     padding: 10px 20px 0 20px;
 }
-
+.subMenu{
+    padding: 10px;
+    text-align: center;
+}
+.subMenu:hover{
+    background-color: var(--color-border-focus);
+    border-radius: 10px;
+}
 .sideMenu li {
     display: flex;
     flex-direction: row;
@@ -321,6 +328,7 @@ input:focus {
 #AddAFolder {
     display: block;
     margin: 0 auto;
+    width: 100%;
 }
 
 #create_list:hover {
@@ -412,12 +420,17 @@ input:focus {
 .delete{
     text-align: left;
 }
+
 .show {
     display: block;
 }
 
+#List_container.show {
+  display: flex !important;
+}
+
 .hide {
-    display: none;
+    display: none !important;
 }
 
 .dropDownMenu {

@@ -33,7 +33,6 @@ export function sideMenu(){
 
     divFolder.id = "div_Folder_" + count;
 
-    
     const dropDown = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });
 
     // Append both to the container, not dropdown inside input
@@ -64,6 +63,7 @@ export function listNameInFolder(name , folderName){
     const todoLine = document.createElement("li");
     todoLine.classList.add("listName");
     todoLine.draggable = false;
+    todoLine.id = name;
     
     const move_line_btn = moveLineBtn();
 

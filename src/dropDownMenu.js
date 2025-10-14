@@ -6,13 +6,18 @@ import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
 
 export function deleteOption(parent){
-    const getdivFolder = parent.children[0]
+    const getdivFolder = parent.children[0];
     if (getdivFolder.classList.value == "divFolder"){
-        const divFolder = document.querySelector(".divFolder")
-        divFolder.remove();    
+        const divFolder = document.querySelector(".divFolder");
+        divFolder.remove();
     }
     if (parent.classList.value == "list"){
+        const listName = parent.children[0].children[0].value
+        const sideMenuList = document.getElementById(listName)
         parent.remove();    
+        if (sideMenuList){
+            sideMenuList.remove();
+        }
     }
 }
 export function addToFolderOption(parent){
