@@ -140,7 +140,7 @@ document.addEventListener("click", (e) => {
     }
     return;
   }
-
+  // Drop down menu on List
   if (e.target.classList.contains("folder-option")) {
      const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
       dropdown_contents.forEach(dropdown => {
@@ -149,8 +149,15 @@ document.addEventListener("click", (e) => {
     });
     const list = e.target.closest(".list");
     const title = list.querySelector(".new_title")
-    console.log(title.value)
-    listNameInFolder(title.value);
+    
+    const folderName = e.target.innerHTML;
+
+    listNameInFolder(title.value , folderName);
+  }
+
+  // Side menu Add a Folder Button
+  if (e.target.id == "AddAFolder"){
+    sideMenu()
   }
 });
 
@@ -172,5 +179,3 @@ document.addEventListener("click", (e) => {
 
 });
 
-
-sideMenu()

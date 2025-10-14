@@ -135,12 +135,6 @@ export function dropMenuBtn(options = {}){
         add_to_folder_option.classList.add("add_to_folder");
         add_to_folder_option.innerHTML = "Add to a folder";
         dropdown_menu.append(add_to_folder_option);
-    } else {
-        // Create "Add a folder" option when showAddaFolder is false
-        const add_folder_option = document.createElement("a");
-        add_folder_option.classList.add("add_folder");
-        add_folder_option.innerHTML = "Add a folder";
-        dropdown_menu.append(add_folder_option);
     }
     
     dropdown.append(option_btn, dropdown_menu);

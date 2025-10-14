@@ -5,9 +5,15 @@ import {generateId} from "./create_list"
 import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
 
-export function deleteOption(list){
-    list.remove();
-    console.log("Delete option");
+export function deleteOption(parent){
+    const getdivFolder = parent.children[0]
+    if (getdivFolder.classList.value == "divFolder"){
+        const divFolder = document.querySelector(".divFolder")
+        divFolder.remove();    
+    }
+    if (parent.classList.value == "list"){
+        parent.remove();    
+    }
 }
 export function addToFolderOption(parent){
     const title = parent.querySelector(".new_title")
