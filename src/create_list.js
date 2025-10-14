@@ -207,7 +207,7 @@ export function createTodoLine(checkBox){
     
     // Adjust input box size base on user type 
     todoTextarea.addEventListener("input", function() {
-        this.style.height = "auto"; // ← 'this' is the textarea
+        this.style.height = "auto"; // â† 'this' is the textarea
         this.style.height = this.scrollHeight + "px";
     });
 

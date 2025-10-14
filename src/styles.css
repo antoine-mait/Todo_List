@@ -140,6 +140,8 @@ input:focus {
 }
 
 /* List Items in Folders */
+
+/* List Items in Folders */
 .listTodos {
     display: flex;
     flex-direction: column;
@@ -154,6 +156,17 @@ input:focus {
     flex-direction: row;
     align-items: center;
     padding-left: 20px;
+    position: relative;
+}
+
+.listName .dropdown {
+    position: relative;
+}
+
+.listName .dropdown_content {
+    position: absolute;
+    top: 100%;
+    left: 0;
 }
 
 /* ============================================
@@ -400,6 +413,8 @@ input:focus {
 .dropdownFoldersNames {
     display: none;
     position: absolute;
+    top: 100%;
+    left: 0;
     background-color: var(--color-border-focus);
     border-radius: 10px;
     width: fit-content;

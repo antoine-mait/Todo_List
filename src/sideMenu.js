@@ -10,7 +10,7 @@ import { sideMenuDragAndDrop } from "./draggable";
 
 let count = 0;
 
-export function sideMenu(){
+export function sideMenu(name){
     const sideMenuToDoFolder = document.querySelector(".folderTitle");
 
     if (!sideMenuToDoFolder) {
@@ -28,9 +28,16 @@ export function sideMenu(){
 
     const folderTitle = document.createElement("input");
     folderTitle.classList.add("folderLists");
-    folderTitle.value = "Folder " + count;
     folderTitle.id = "Folder_" + count;
 
+    divFolder.dataset.folderId = count;
+    
+    if (name){
+        folderTitle.value = name;
+    } else {
+        folderTitle.value = "Folder " + count;
+    }
+    
     divFolder.id = "div_Folder_" + count;
 
     const dropDown = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });

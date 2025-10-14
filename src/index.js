@@ -22,34 +22,32 @@ import {
 } from "./sideMenu.js";
 
 const listContainer = document.querySelector("#List_container")
-// When customer open the page , it's already setpUp
 
-// Initialize with default data on first load
 // Initialize with default data on first load
 function initializeDefaultData() {
   // Check if this is the first time loading (you can expand this later for localStorage)
   const hasExistingLists = document.querySelectorAll('.list').length > 0;
-  
+
   if (!hasExistingLists) {
     // Remove the initial "Add List" button
     const initialAddBtn = document.querySelector("#add_list");
     if (initialAddBtn) {
       initialAddBtn.remove();
     }
-    
+
     // Create default folders in side menu
-    sideMenu(); // Creates "Folder 1"
-    sideMenu(); // Creates "Folder 2"
-    
+    sideMenu("Shopping"); // Creates "Folder 1"
+    sideMenu("Work"); // Creates "Folder 2"
+
     // Create a sample list with todos
     createListFromTitle("Shopping List");
-    
+
     // Wait a tick for DOM to update, then add todos
     setTimeout(() => {
       const firstList = document.querySelector('.list');
       if (firstList) {
         const checkBox = firstList.querySelector('.checkBox');
-        
+
         // Add multiple todos
         const todos = [
           { text: "Buy milk", checked: true },
@@ -57,28 +55,30 @@ function initializeDefaultData() {
           { text: "Pick up vegetables", checked: false },
           { text: "Buy coffee", checked: false }
         ];
-        
+
         todos.forEach((todo, index) => {
           const wrapper = createTodoLine(checkBox);
           const textarea = wrapper.querySelector('.todo-text');
           const checkbox = wrapper.querySelector('.todo-checkbox');
-          
+
           textarea.value = todo.text;
           textarea.style.height = "auto";
           textarea.style.height = textarea.scrollHeight + "px";
-          
+
           if (todo.checked) {
             checkbox.checked = true;
             toggleTodoCompletion(checkbox);
           }
         });
+        // Add Shopping List to Folder 1
+        listNameInFolder("Shopping List", "Folder 1");
       }
     }, 100);
-    
+
     // Create another list
     setTimeout(() => {
       createListFromTitle("Work Tasks");
-      
+
       setTimeout(() => {
         const lists = document.querySelectorAll('.list');
         const secondList = lists[1];
@@ -89,8 +89,10 @@ function initializeDefaultData() {
           textarea.value = "Finish project report";
           textarea.style.height = "auto";
           textarea.style.height = textarea.scrollHeight + "px";
+
+          listNameInFolder("Work Tasks", "Folder 2");
         }
-        
+
         // Now add the "Add List" button at the very end
         createAddListButton();
       }, 150);
@@ -197,6 +199,15 @@ document.addEventListener("click", (e) => {
 
   // Delete list or folder
   if (e.target.classList.contains("delete")) {
+    // First check if we're deleting a list item inside a folder (side menu)
+    const listNameParent = e.target.closest(".listName");
+    if (listNameParent) {
+      // Just remove the list item from the folder
+      listNameParent.remove();
+      return; // Exit early, don't proceed to folder/list deletion
+    }
+
+    // If not a side menu list item, proceed with normal deletion
     const parent = getDropdownParent(e.target);
     if (parent) {
       deleteOption(parent);
@@ -210,7 +221,7 @@ document.addEventListener("click", (e) => {
     if (parent) {
       const dropdown_content = parent.querySelector(".dropdown_content");
       if (dropdown_content) {
-       dropdown_content.classList.add("hide");
+        dropdown_content.classList.add("hide");
         dropdown_content.classList.remove("show");
       }
       dropFolderMenuBtn(parent);
@@ -219,30 +230,30 @@ document.addEventListener("click", (e) => {
   }
   // Drop down menu on List
   if (e.target.classList.contains("folder-option")) {
-     const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
-      dropdown_contents.forEach(dropdown => {
+    const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
+    dropdown_contents.forEach(dropdown => {
       dropdown.classList.remove("show");
       dropdown.classList.add("hide");
     });
     const list = e.target.closest(".list");
     const title = list.querySelector(".new_title")
-    
+
     const folderName = e.target.innerHTML;
 
-    listNameInFolder(title.value , folderName);
+    listNameInFolder(title.value, folderName);
   }
 
   // Side menu Add a Folder Button
-  if (e.target.id == "AddAFolder"){
+  if (e.target.id == "AddAFolder") {
     sideMenu()
   }
 
   // To do Folders show 
-  if (e.target.classList.contains("subMenu")){
+  if (e.target.classList.contains("subMenu")) {
     const folders = document.querySelector(".folders");
     const listContainer = document.getElementById("List_container");
 
-    if (folders.classList.contains("show")){
+    if (folders.classList.contains("show")) {
       listContainer.classList.remove("show");
       listContainer.classList.add("hide");
 
@@ -251,7 +262,7 @@ document.addEventListener("click", (e) => {
     } else {
       listContainer.classList.remove("hide");
       listContainer.classList.add("show");
-      
+
       folders.classList.remove("hide");
       folders.classList.add("show");
     }
@@ -259,7 +270,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-  
+
 // Hide dropDown menu by clicking anywhere
 document.addEventListener("click", (e) => {
   if (!e.target.classList.contains("option_btn") && !e.target.closest(".dropdown_content")) {
@@ -268,13 +279,13 @@ document.addEventListener("click", (e) => {
       dropdown.classList.remove("show");
       dropdown.classList.add("hide");
     });
-  if (!e.target.classList.contains("folder-option") && !e.target.closest(".dropdown_content")) {
-    const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
-    dropdown_contents.forEach(dropdown => {
-      dropdown.classList.remove("show");
-      dropdown.classList.add("hide");
-    });
-  }}
+    if (!e.target.classList.contains("folder-option") && !e.target.closest(".dropdown_content")) {
+      const dropdown_contents = document.querySelectorAll(".dropdownFoldersNames.show");
+      dropdown_contents.forEach(dropdown => {
+        dropdown.classList.remove("show");
+        dropdown.classList.add("hide");
+      });
+    }
+  }
 
 });
-

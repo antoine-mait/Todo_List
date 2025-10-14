@@ -6,12 +6,18 @@ import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 
 
 export function deleteOption(parent){
+    // Check if it's a folder (has divFolder as first child)
     const getdivFolder = parent.children[0];
-    if (getdivFolder.classList.value == "divFolder"){
+    if (getdivFolder && getdivFolder.classList.contains("divFolder")){
         const divFolder = document.querySelector(".divFolder");
-        divFolder.remove();
+        if (divFolder) {
+            divFolder.remove();
+        }
+        return;
     }
-    if (parent.classList.value == "list"){
+    
+    // Check if it's a main list (not a list item in side menu)
+    if (parent.classList.contains("list")){
         const listName = parent.children[0].children[0].value
         const sideMenuList = document.getElementById(listName)
         parent.remove();    
@@ -20,6 +26,7 @@ export function deleteOption(parent){
         }
     }
 }
+
 export function addToFolderOption(parent){
     const title = parent.querySelector(".new_title")
     console.log(title.value);
