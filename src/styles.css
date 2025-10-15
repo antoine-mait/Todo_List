@@ -27,6 +27,10 @@ input:focus {
     border-color: var(--color-border-focus);
 }
 
+button:hover{
+    cursor: pointer;
+}
+
 /* ============================================
    TOP BAR
    ============================================ */
@@ -283,7 +287,9 @@ input:focus {
     color: var(--color-text);
     background-color: var(--color-border-focus);
 }
-
+.todo-checkbox:hover{
+    cursor : pointer;
+}
 .percentage {
     display: flex;
     align-items: center;
@@ -400,7 +406,10 @@ input:focus {
     height: 25px;
     width: 25px;
 }
-
+.option_btn:hover{
+    background-color:var(--color-mix90);
+    cursor: pointer;
+}
 /* ============================================
    DROPDOWN MENUS
    ============================================ */
@@ -431,11 +440,14 @@ input:focus {
     text-decoration: none;
     display: block;
     padding-left: 15px;
+    cursor: pointer;
 }
 .delete{
     text-align: left;
 }
-
+.delete a:hover{
+    cursor: pointer;
+}
 .show {
     display: block;
 }

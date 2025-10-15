@@ -27,18 +27,21 @@ export function sideMenu(name){
     count++;
 
     const folderTitle = document.createElement("input");
-    folderTitle.classList.add("folderLists");
-    folderTitle.id = "Folder_" + count;
+    folderTitle.classList.add("folderLists");    
 
     divFolder.dataset.folderId = count;
     
     if (name){
+        console.log("side menu Name")
         folderTitle.value = name;
+        folderTitle.id = "Folder_" + name;
+        divFolder.id = "div_Folder_" + name;
     } else {
         folderTitle.value = "Folder " + count;
+        folderTitle.id = "Folder_" + count;
+        divFolder.id = "div_Folder_" + count;
     }
     
-    divFolder.id = "div_Folder_" + count;
 
     const dropDown = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });
 
@@ -52,8 +55,9 @@ export function sideMenu(name){
 
 export function listNameInFolder(name , folderName){
     const folderId = folderName.replace("Folder ", "");
+    console.log(folderName);
     const divFolder = document.getElementById("div_Folder_" + folderId);
-    
+    // div_Folder_Shopping
     if (!divFolder) {
         console.error("Folder not found:", "div_Folder_" + folderId);
         return;
@@ -72,14 +76,14 @@ export function listNameInFolder(name , folderName){
     todoLine.draggable = false;
     todoLine.id = name;
     
-    const move_line_btn = moveLineBtn();
+    const delete_line_btn = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });
 
     const todoText = document.createElement("input");
     todoText.classList.add("todoText");
     todoText.value = name;
     todoText.id = "TodoName_" + generateId();
 
-    todoLine.append(move_line_btn, todoText);
+    todoLine.append(delete_line_btn, todoText);
     ulListTodo.append(todoLine);
 
     sideMenuDragAndDrop(ulListTodo);

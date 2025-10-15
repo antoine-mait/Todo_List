@@ -222,14 +222,14 @@ export function sideMenuDragAndDrop(listTodos) {
 
         newItem.draggable = false;
         
-        const moveBtn = newItem.querySelector(".move_line_btn");
+        const deleteBtn = newItem.querySelector(".option_btn");
         
         // Desktop: Make move button initiate drag
-        moveBtn.addEventListener("mousedown", () => {
+        deleteBtn.addEventListener("mousedown", () => {
             newItem.draggable = true;
         });
         
-        moveBtn.addEventListener("mouseup", () => {
+        deleteBtn.addEventListener("mouseup", () => {
             newItem.draggable = false;
         });
 
@@ -264,7 +264,7 @@ export function sideMenuDragAndDrop(listTodos) {
         });
 
         // Mobile: Touch events on move button only
-        moveBtn.addEventListener("touchstart", (e) => {
+        deleteBtn.addEventListener("touchstart", (e) => {
             e.stopPropagation();
             e.preventDefault();
             draggedItem = newItem;
@@ -274,7 +274,7 @@ export function sideMenuDragAndDrop(listTodos) {
             newItem.classList.add("dragging");
         });
 
-        moveBtn.addEventListener("touchmove", (e) => {
+        deleteBtn.addEventListener("touchmove", (e) => {
             if (!touchData.isDragging || touchData.currentElement !== newItem) return;
             
             e.preventDefault();
@@ -297,7 +297,7 @@ export function sideMenuDragAndDrop(listTodos) {
             }
         });
 
-        moveBtn.addEventListener("touchend", (e) => {
+        deleteBtn.addEventListener("touchend", (e) => {
             e.stopPropagation();
             newItem.classList.remove("dragging");
             draggedItem = null;

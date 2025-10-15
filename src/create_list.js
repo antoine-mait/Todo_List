@@ -175,12 +175,6 @@ export function dropFolderMenuBtn(parent){
     return dropdown;
 }
 
-function percentageCompletion(listElement){
-    const percentage = document.createElement("div");
-    percentage.classList.add("percentage");
-    percentage.innerHTML = "0% Done";
-    return percentage;
-}
 
 export function createTodoLine(checkBox){
     const wrapper = document.createElement("div");
@@ -253,6 +247,13 @@ export function addNewTodoLine(addButton) {
     setupTodoDragAndDrop(checkBox);
 }
 
+function percentageCompletion(){
+    const percentage = document.createElement("div");
+    percentage.classList.add("percentage");
+    percentage.innerHTML = "0% Done";
+    return percentage;
+}
+
 export function toggleTodoCompletion(checkbox) {
     const wrapper = checkbox.closest(".todo_line_wrapper");
     const textarea = wrapper.querySelector(".todo-text");
@@ -274,7 +275,7 @@ export function toggleTodoCompletion(checkbox) {
     percentageCalculation(wrapper);
 }
 
-function percentageCalculation(wrapper){
+export function percentageCalculation(wrapper){
     const listElement = wrapper.closest(".list");
     if (listElement) {
         const percentageElement = listElement.querySelector(".percentage");

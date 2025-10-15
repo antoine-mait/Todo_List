@@ -6,7 +6,8 @@ import createList, {
   addNewTodoLine,
   toggleTodoCompletion,
   dropFolderMenuBtn,
-  createTodoLine
+  createTodoLine,
+  percentageCalculation,
 } from "./create_list.js";
 
 import {
@@ -71,7 +72,7 @@ function initializeDefaultData() {
           }
         });
         // Add Shopping List to Folder 1
-        listNameInFolder("Shopping List", "Folder 1");
+        listNameInFolder("Shopping List", "Shopping");
       }
     }, 100);
 
@@ -90,7 +91,7 @@ function initializeDefaultData() {
           textarea.style.height = "auto";
           textarea.style.height = textarea.scrollHeight + "px";
 
-          listNameInFolder("Work Tasks", "Folder 2");
+          listNameInFolder("Work Tasks", "Work");
         }
 
         // Now add the "Add List" button at the very end
@@ -112,6 +113,19 @@ listContainer.addEventListener("keypress", (e) => {
 
 // Helper function to find the parent container (either .list or .folderTitle)
 function getDropdownParent(element) {
+  // First check if we're in a side menu folder header
+  const folderHeader = element.closest(".folderHeader");
+  if (folderHeader) {
+    return folderHeader.closest(".divFolder");
+  }
+  
+  // Then check if we're in a list name item (inside folder)
+  const listNameItem = element.closest(".listName");
+  if (listNameItem) {
+    return listNameItem;
+  }
+  
+  // Otherwise, return list or folderTitle as before
   return element.closest(".list") || element.closest(".folderTitle");
 }
 
@@ -149,7 +163,23 @@ document.addEventListener("click", (e) => {
 
   // "X" button - deletes a todo line
   if (e.target.classList.contains("delete_line_btn")) {
-    e.target.closest(".todo_line_wrapper").remove();
+    const wrapper = e.target.closest(".todo_line_wrapper");
+    const listElement = wrapper.closest(".list");
+
+    wrapper.remove();
+
+    if ( listElement ){
+      const remainingWrapper = listElement.querySelector(".todo_line_wrapper");
+      if ( remainingWrapper ){
+        percentageCalculation(remainingWrapper);
+      } else {
+        const percentageElement = listElement.querySelector(".percentage");
+        if ( percentageElement ){
+          percentageElement.innerHTML = "0% Done";
+          listElement.style.backgroundColor = "var(--color-background)";
+        }
+      }
+    }
     return;
   }
 
@@ -171,6 +201,15 @@ document.addEventListener("click", (e) => {
     if (parent) {
       const dropdown_content = parent.querySelector(".dropdown_content");
       if (dropdown_content) {
+        // Get mouse position
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        // Change positioning to fixed (relative to viewport)
+        dropdown_content.style.position = "fixed";
+        dropdown_content.style.left = mouseX + "px";
+        dropdown_content.style.top = mouseY + "px";
+
         dropdown_content.classList.remove("hide");
         dropdown_content.classList.add("show");
       }

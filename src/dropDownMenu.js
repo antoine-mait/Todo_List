@@ -8,8 +8,10 @@ import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
 export function deleteOption(parent){
     // Check if it's a folder (has divFolder as first child)
     const getdivFolder = parent.children[0];
-    if (getdivFolder && getdivFolder.classList.contains("divFolder")){
-        const divFolder = document.querySelector(".divFolder");
+
+    if (getdivFolder && getdivFolder.classList.contains("folderHeader")){
+        
+        const divFolder = getdivFolder.parentElement;
         if (divFolder) {
             divFolder.remove();
         }
