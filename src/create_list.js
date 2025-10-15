@@ -83,6 +83,7 @@ export function createListFromTitle(titleValue) {
 
     const checkBox = document.createElement("div");
     checkBox.classList.add("checkBox");
+    checkBox.classList.add("show");
 
     // Create the + button , to create new todo 
     createAddTodoButton(checkBox);
@@ -210,7 +211,7 @@ export function createTodoLine(checkBox){
     const move_line_btn = moveLineBtn();
 
     label.appendChild(todoTextarea);
-    wrapper.append(move_line_btn, checkbox, label, delete_line_btn);
+    wrapper.append(checkbox, move_line_btn, label, delete_line_btn);
     checkBox.append(wrapper);
 
     percentageCalculation(wrapper);

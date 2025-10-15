@@ -135,7 +135,7 @@ export function setupTodoDragAndDrop(checkBox) {
 
         newTodo.addEventListener("drop", function (e) {
             e.preventDefault();
-            if (draggedTodo !== this) {
+            if (draggedTodo && draggedTodo !== this && draggedTodo.parentElement === this.parentElement) {
                 const allTodos = Array.from(checkBox.querySelectorAll(".todo_line_wrapper"));
                 const draggedIndex = allTodos.indexOf(draggedTodo);
                 const targetIndex = allTodos.indexOf(this);
@@ -156,8 +156,6 @@ export function setupTodoDragAndDrop(checkBox) {
 
         // Mobile: Touch events on move button only
         moveBtn.addEventListener("touchstart", (e) => {
-            e.stopPropagation();
-            e.preventDefault();
             draggedTodo = newTodo;
             touchData.currentElement = newTodo;
             touchData.isDragging = true;
@@ -250,7 +248,7 @@ export function sideMenuDragAndDrop(listTodos) {
 
         newItem.addEventListener("drop", function (e) {
             e.preventDefault();
-            if (draggedItem !== this) {
+            if (draggedItem && draggedItem !== this && draggedItem.parentElement === this.parentElement) {
                 const allItems = Array.from(listTodos.querySelectorAll(".listName"));
                 const draggedIndex = allItems.indexOf(draggedItem);
                 const targetIndex = allItems.indexOf(this);
@@ -265,8 +263,6 @@ export function sideMenuDragAndDrop(listTodos) {
 
         // Mobile: Touch events on move button only
         deleteBtn.addEventListener("touchstart", (e) => {
-            e.stopPropagation();
-            e.preventDefault();
             draggedItem = newItem;
             touchData.currentElement = newItem;
             touchData.isDragging = true;
@@ -304,5 +300,121 @@ export function sideMenuDragAndDrop(listTodos) {
             touchData.currentElement = null;
             touchData.isDragging = false;
         });
+    });
+}
+
+export function folderDragAndDrop() {
+    const folderTitle = document.querySelector(".folderTitle");
+    if (!folderTitle) return;
+    
+    const folders = folderTitle.querySelectorAll(".divFolder");
+    let draggedFolder = null;
+    let touchData = { startY: 0, startX: 0, currentElement: null, isDragging: false };
+
+    folders.forEach(folder => {
+        const newFolder = folder.cloneNode(true);
+        folder.parentNode.replaceChild(newFolder, folder);
+
+        newFolder.draggable = false;
+        
+        const optionBtn = newFolder.querySelector(".option_btn");
+        
+        // Desktop: Make option button initiate drag
+        optionBtn.addEventListener("mousedown", () => {
+            newFolder.draggable = true;
+        });
+        
+        optionBtn.addEventListener("mouseup", () => {
+            newFolder.draggable = false;
+        });
+
+        // Desktop drag events
+        newFolder.addEventListener("dragstart", (e) => {
+            draggedFolder = newFolder;
+            newFolder.classList.add("dragging");
+        });
+
+        newFolder.addEventListener("dragend", () => {
+            newFolder.classList.remove("dragging");
+            newFolder.draggable = false;
+        });
+
+        newFolder.addEventListener("dragover", (e) => {
+            e.preventDefault();
+        });
+
+        newFolder.addEventListener("drop", function (e) {
+            e.preventDefault();
+            if (draggedFolder && draggedFolder !== this && draggedFolder.parentElement === this.parentElement) {
+                const allFolders = Array.from(folderTitle.querySelectorAll(".divFolder"));
+                const draggedIndex = allFolders.indexOf(draggedFolder);
+                const targetIndex = allFolders.indexOf(this);
+
+                if (draggedIndex < targetIndex) {
+                    this.parentNode.insertBefore(draggedFolder, this.nextSibling);
+                } else {
+                    this.parentNode.insertBefore(draggedFolder, this);
+                }
+            }
+        });
+
+        // Mobile: Touch events on option button only
+        optionBtn.addEventListener("touchstart", (e) => {
+            e.stopPropagation();
+            
+            draggedFolder = newFolder;
+            touchData.currentElement = newFolder;
+            touchData.isDragging = false;
+            touchData.startY = e.touches[0].clientY;
+            touchData.startX = e.touches[0].clientX;
+        });
+
+        optionBtn.addEventListener("touchmove", (e) => {
+            if (touchData.currentElement !== newFolder) return;
+            
+            // Only start dragging if moved more than 5px
+            const moveY = Math.abs(e.touches[0].clientY - touchData.startY);
+            const moveX = Math.abs(e.touches[0].clientX - touchData.startX);
+            
+            if (!touchData.isDragging && (moveY > 5 || moveX > 5)) {
+                touchData.isDragging = true;
+                newFolder.classList.add("dragging");
+            }
+            
+            if (!touchData.isDragging) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const touch = e.touches[0];
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const folderBelow = elementBelow?.closest(".divFolder");
+
+            if (folderBelow && folderBelow !== draggedFolder && folderBelow.parentElement === folderTitle) {
+                const allFolders = Array.from(folderTitle.querySelectorAll(".divFolder"));
+                const draggedIndex = allFolders.indexOf(draggedFolder);
+                const targetIndex = allFolders.indexOf(folderBelow);
+
+                if (draggedIndex < targetIndex) {
+                    folderBelow.parentNode.insertBefore(draggedFolder, folderBelow.nextSibling);
+                } else {
+                    folderBelow.parentNode.insertBefore(draggedFolder, folderBelow);
+                }
+            }
+        });
+
+        optionBtn.addEventListener("touchend", (e) => {
+            e.stopPropagation();
+            newFolder.classList.remove("dragging");
+            draggedFolder = null;
+            touchData.currentElement = null;
+            touchData.isDragging = false;
+        });
+
+        // Re-initialize list drag and drop for lists inside this folder
+        const listTodos = newFolder.querySelector(".listTodos");
+        if (listTodos) {
+            sideMenuDragAndDrop(listTodos);
+        }
     });
 }

@@ -6,7 +6,7 @@ import {
 
 import {generateId} from "./create_list";
 
-import { sideMenuDragAndDrop } from "./draggable";
+import { sideMenuDragAndDrop, folderDragAndDrop } from "./draggable";
 
 let count = 0;
 
@@ -51,11 +51,12 @@ export function sideMenu(name){
 
     sideMenuToDoFolder.append(divFolder);
 
+    folderDragAndDrop();
+
 }
 
 export function listNameInFolder(name , folderName){
     const folderId = folderName.replace("Folder ", "");
-    console.log(folderName);
     const divFolder = document.getElementById("div_Folder_" + folderId);
     // div_Folder_Shopping
     if (!divFolder) {
@@ -87,4 +88,6 @@ export function listNameInFolder(name , folderName){
     ulListTodo.append(todoLine);
 
     sideMenuDragAndDrop(ulListTodo);
+
+    folderDragAndDrop();
 }

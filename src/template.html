@@ -16,8 +16,11 @@
     <div class="sideMenu">
         <!-- To Do App -->
         <div class="toDoApp">
-            <h2 class="subMenu">To Do folders</h2>
-            <button class="button" id ="AddAFolder">Add a folder</button>
+            <div class="folderTitleBtn">
+                <h2 class="subMenu">To Do folders</h2>
+                <button class="button" id ="AddAFolder">+</button>
+            </div>
+            
             <div class="folders show">
                 <div class="folderTitle">
                     <!--
@@ -29,7 +32,10 @@
         </div>
         <!-- Calorie Count -->
         <div class="KCalTrack">
-            <h2 class="subMenu">KCal Tracking</h2>
+             <div class="folderTitleBtn">
+                <h2 class="subMenukCal">KCal Tracking</h2>
+                <button class="button" id ="AddAFolder">+</button>
+            </div>
             <!-- <div class="folders">
                 <div class="folderTitle">
                 </div>
@@ -53,4 +59,38 @@ Create a function to automatically save locally when an action is done
 
 Make sure it doesnt crash if there is no data in local 
 Data are saved in JSON
+
+to store the data 
+const userObj = {
+  username = "Maria",
+  email: "maria@mail.com"
+}
+
+localStorage.setItem('user', JSON.stringify(userObj))
+
+to retrieve it 
+const storedUserData = localStorage.getItem('user')
+
+if (storedUserData) {
+  const userData = JSON.parse(storedUserData)
+  // You can use userData here...
+} else {
+  console.log('User data not found in local storage')
+}
+
+to delete it 
+localStorage.removeItem(key)
+to delete all data
+localStorage.clear()
+
+save with btn 
+<button class="saveNameBtn">Save Name</button>
+
+const saveNameButton = document.querySelector(".saveNameBtn")
+
+saveNameButton.addEventListener("click", () => {
+  const userName = document.querySelector(".name").value
+  userNameText.textContent = userName
+  localStorage.setItem("name", userName)
+})
 -->

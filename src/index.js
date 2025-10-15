@@ -118,13 +118,13 @@ function getDropdownParent(element) {
   if (folderHeader) {
     return folderHeader.closest(".divFolder");
   }
-  
+
   // Then check if we're in a list name item (inside folder)
   const listNameItem = element.closest(".listName");
   if (listNameItem) {
     return listNameItem;
   }
-  
+
   // Otherwise, return list or folderTitle as before
   return element.closest(".list") || element.closest(".folderTitle");
 }
@@ -168,13 +168,13 @@ document.addEventListener("click", (e) => {
 
     wrapper.remove();
 
-    if ( listElement ){
+    if (listElement) {
       const remainingWrapper = listElement.querySelector(".todo_line_wrapper");
-      if ( remainingWrapper ){
+      if (remainingWrapper) {
         percentageCalculation(remainingWrapper);
       } else {
         const percentageElement = listElement.querySelector(".percentage");
-        if ( percentageElement ){
+        if (percentageElement) {
           percentageElement.innerHTML = "0% Done";
           listElement.style.backgroundColor = "var(--color-background)";
         }
@@ -197,6 +197,13 @@ document.addEventListener("click", (e) => {
 
   // Option button dropDown menu
   if (e.target.classList.contains("option_btn")) {
+    // First, close all other open dropdowns
+    const allDropdowns = document.querySelectorAll(".dropdown_content.show");
+    allDropdowns.forEach(dropdown => {
+      dropdown.classList.remove("show");
+      dropdown.classList.add("hide");
+    });
+
     const parent = getDropdownParent(e.target);
     if (parent) {
       const dropdown_content = parent.querySelector(".dropdown_content");
@@ -204,7 +211,7 @@ document.addEventListener("click", (e) => {
         // Get mouse position
         const mouseX = e.clientX;
         const mouseY = e.clientY;
-        
+
         // Change positioning to fixed (relative to viewport)
         dropdown_content.style.position = "fixed";
         dropdown_content.style.left = mouseX + "px";
@@ -307,6 +314,26 @@ document.addEventListener("click", (e) => {
     }
 
   }
+
+  // Hide Todo line by clicking on list 
+  if (e.target.classList.contains("list") || e.target.classList.contains("percentage")) {
+    const clickedList = e.target.closest(".list");
+
+    if (clickedList) {
+      const todoLines = clickedList.querySelector(".checkBox");
+
+      if (todoLines) {
+        if (todoLines.classList.contains("show")) {
+          todoLines.classList.remove("show");
+          todoLines.classList.add("hide");
+        } else {
+          todoLines.classList.remove("hide");
+          todoLines.classList.add("show");
+        }
+      }
+    }
+  }
+
 });
 
 
@@ -326,5 +353,6 @@ document.addEventListener("click", (e) => {
       });
     }
   }
+
 
 });
