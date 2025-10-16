@@ -12,8 +12,6 @@ import createList, {
 
 import {
   deleteOption,
-  renameOption,
-  addToFolderOption,
   duplicateOption
 } from "./dropDownMenu.js";
 
@@ -21,6 +19,12 @@ import {
   sideMenu,
   listNameInFolder
 } from "./sideMenu.js";
+
+import {
+  storeData,
+  restoreData,
+  deleteData
+} from "./storage.js";
 
 const listContainer = document.querySelector("#List_container")
 
@@ -75,6 +79,7 @@ function initializeDefaultData() {
         listNameInFolder("Shopping List", "Shopping");
       }
     }, 100);
+    
 
     // Create another list
     setTimeout(() => {
@@ -102,6 +107,7 @@ function initializeDefaultData() {
 }
 // Call initialization when DOM is ready
 initializeDefaultData();
+
 
 listContainer.addEventListener("keypress", (e) => {
   // Check if Enter key is pressed on the title input

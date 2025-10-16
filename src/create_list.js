@@ -1,4 +1,13 @@
-import { setupDragAndDrop, setupTodoDragAndDrop } from "./draggable.js"
+import { 
+    setupDragAndDrop, 
+    setupTodoDragAndDrop 
+} from "./draggable.js";
+
+import {
+  storeData,
+  restoreData,
+  deleteData
+} from "./storage.js";
 
 const content = document.querySelector("#List_container");
 
@@ -49,6 +58,8 @@ export function createAddListButton() {
     addList_btn.innerHTML = "Add List";
 
     content.append(addList_btn);
+
+    storeData();
 };
 
 function validateTitle(title) {
@@ -65,7 +76,7 @@ export function createListFromTitle(titleValue) {
     const listDiv = document.createElement("div");
     listDiv.classList.add("list");
     const listId = generateId();
-    listDiv.id = "list_" + listId;
+    listDiv.id = listId;
     listDiv.draggable = true;
 
     const new_title = document.createElement("input");
@@ -177,25 +188,30 @@ export function dropFolderMenuBtn(parent){
 }
 
 
-export function createTodoLine(checkBox){
+export function createTodoLine(checkBox, storeID){
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
     wrapper.draggable = true;
 
-    const todoId = generateId();
+    let todoId
+    if (storeID){
+        todoId = storeID;
+    } else {
+        todoId = generateId();
+    }
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = "todo_line_" + todoId;
+    checkbox.id = todoId;
     checkbox.classList.add("todo-checkbox");
 
     const label = document.createElement("label");
-    label.htmlFor = "todo_line_" + todoId;
+    label.htmlFor = todoId;
     label.classList.add("todo-label");
 
     const todoTextarea = document.createElement("textarea");
     todoTextarea.classList.add("todo-text");
-    todoTextarea.id = "todo_text_" + todoId;
+    todoTextarea.id = todoId;
     todoTextarea.placeholder = "To do : ...."
     todoTextarea.rows = 1;
     todoTextarea.classList.add("not-completed");
@@ -294,7 +310,6 @@ export function percentageCalculation(wrapper){
             }
             
             percentageElement.innerHTML = calculePercentage + "% Done";
-            console.log("List:", listElement.id, "- Percentage:", calculePercentage);
 
             if (calculePercentage === 100 && totalCount > 0){
                 listElement.style.backgroundColor = "var(--color-checked-background)";

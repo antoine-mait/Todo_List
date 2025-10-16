@@ -32,7 +32,6 @@ export function sideMenu(name){
     divFolder.dataset.folderId = count;
     
     if (name){
-        console.log("side menu Name")
         folderTitle.value = name;
         folderTitle.id = "Folder_" + name;
         divFolder.id = "div_Folder_" + name;
