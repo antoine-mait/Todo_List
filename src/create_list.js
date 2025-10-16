@@ -95,14 +95,9 @@ export function createListFromTitle(titleValue, id, checkboxState, percentageSav
     // Create the + button , to create new todo 
     createAddTodoButton(checkBox);
 
-    // Create the todo line
-    if (!titleValue){
-        createTodoLine(checkBox);
-    }
-
     let percentage = percentageCompletion();
 
-    if (titleValue && titleValue.lenght > 0){
+    if (todosSaved  && todosSaved.length > 0){
         listDiv.id = id;
         percentage = percentageCompletion(percentageSaved)
         todosSaved.forEach(todo => {
@@ -115,6 +110,8 @@ export function createListFromTitle(titleValue, id, checkboxState, percentageSav
             checkBox.classList.remove("show");
             checkBox.classList.add("hide");
         }
+    } else {
+        createTodoLine(checkBox);
     }
     title_box.append(new_title, dropdown);
     listDiv.append(title_box, percentage, checkBox);

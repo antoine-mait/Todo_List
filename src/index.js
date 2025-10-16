@@ -53,7 +53,7 @@ function initializeDefaultData() {
     // Create default folders in side menu
     sideMenu("Shopping"); // Creates "Folder 1"
     sideMenu("Work"); // Creates "Folder 2"
-    
+
     // Now add the "Add List" button at the very end
     createAddListButton();
 
