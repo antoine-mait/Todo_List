@@ -54,7 +54,7 @@ export function createAddListButton() {
     addList_btn.id = "add_list";
     addList_btn.innerHTML = "Add List";
 
-    content.append(addList_btn);
+    content.prepend(addList_btn);
 
 };
 

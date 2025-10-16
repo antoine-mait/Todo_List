@@ -160,6 +160,7 @@ document.addEventListener("click", (e) => {
         listBox.remove();
       }
       createAddListButton();
+      storeData();
     }
     return;
   }
