@@ -27,6 +27,16 @@ import {
 } from "./storage.js";
 
 const listContainer = document.querySelector("#List_container")
+const storedUserData = localStorage.getItem("lists")
+
+if(storedUserData){
+  console.log("data restored")
+  restoreData();
+}else{
+// Call initialization when DOM is ready
+  console.log("store data")
+  initializeDefaultData();
+}
 
 // Initialize with default data on first load
 function initializeDefaultData() {
@@ -43,10 +53,13 @@ function initializeDefaultData() {
     // Create default folders in side menu
     sideMenu("Shopping"); // Creates "Folder 1"
     sideMenu("Work"); // Creates "Folder 2"
+    
+    // Now add the "Add List" button at the very end
+    createAddListButton();
 
     // Create a sample list with todos
     createListFromTitle("Shopping List");
-
+    
     // Wait a tick for DOM to update, then add todos
     setTimeout(() => {
       const firstList = document.querySelector('.list');
@@ -98,16 +111,10 @@ function initializeDefaultData() {
 
           listNameInFolder("Work Tasks", "Work");
         }
-
-        // Now add the "Add List" button at the very end
-        createAddListButton();
       }, 150);
     }, 200);
   }
 }
-// Call initialization when DOM is ready
-initializeDefaultData();
-
 
 listContainer.addEventListener("keypress", (e) => {
   // Check if Enter key is pressed on the title input
@@ -362,3 +369,17 @@ document.addEventListener("click", (e) => {
 
 
 });
+
+document.addEventListener("keydown", (e) => {
+   if (e.ctrlKey && e.key === "s"){
+      e.preventDefault();
+      storeData();
+      console.log("save data")
+   }
+   if (e.ctrlKey && e.key === "d"){
+      e.preventDefault();
+      localStorage.clear()
+      console.log("delete data")
+   }
+  });
+

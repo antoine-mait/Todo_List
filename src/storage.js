@@ -1,3 +1,9 @@
+import createList, 
+{
+createListFromTitle
+} 
+from "./create_list";
+
 export function storeData() {
     const lists = document.querySelectorAll(".list");
     let allLists = [];
@@ -34,21 +40,20 @@ export function storeData() {
     }
 
     localStorage.setItem('lists', JSON.stringify(allLists));
-    
+    // need to save the folders on the side menu
 }
 
 export function restoreData() {
-    const storedUserData = localStorage.getItem('user')
+    const storedUserData = localStorage.getItem('lists')
+
+    console.log("restore Data")
     if (storedUserData) {
         const userData = JSON.parse(storedUserData)
-        // You can use userData here...
+        userData.forEach(list => {
+            createListFromTitle(list.listName , list.id , list.checkbox , list.percentage, list.todos)
+        });
+        
     } else {
         console.log('User data not found in local storage')
     }
 }
-
-export function deleteData() {
-    localStorage.removeItem(key)
-    localStorage.clear()
-}
-

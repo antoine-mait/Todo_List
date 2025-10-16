@@ -1,13 +1,9 @@
-import { 
-    setupDragAndDrop, 
-    setupTodoDragAndDrop 
+import {
+    setupDragAndDrop,
+    setupTodoDragAndDrop
 } from "./draggable.js";
 
-import {
-  storeData,
-  restoreData,
-  deleteData
-} from "./storage.js";
+const storedUserData = localStorage.getItem('lists')
 
 const content = document.querySelector("#List_container");
 
@@ -16,7 +12,8 @@ export function generateId() {
     return crypto.randomUUID();
 }
 
-export default function createList(name) {
+export default function createList() {
+
 
     const addList_btn = document.querySelector("#add_list");
     addList_btn.remove();
@@ -59,19 +56,18 @@ export function createAddListButton() {
 
     content.append(addList_btn);
 
-    storeData();
 };
 
 function validateTitle(title) {
     return title && title.trim().length > 0;
 }
 
-export function createListFromTitle(titleValue) {
+export function createListFromTitle(titleValue, id, checkboxState, percentageSaved, todosSaved) {
 
     if (!validateTitle(titleValue)) {
         alert("Please enter a list name");
         return;
-        }
+    }
 
     const listDiv = document.createElement("div");
     listDiv.classList.add("list");
@@ -81,9 +77,9 @@ export function createListFromTitle(titleValue) {
 
     const new_title = document.createElement("input");
     new_title.classList.add("new_title");
-    new_title.id = "title" + generateId();
+    new_title.id = generateId();
     new_title.value = titleValue;
-    new_title.addEventListener("focus", function() {
+    new_title.addEventListener("focus", function () {
         this.select();
     });
 
@@ -100,22 +96,38 @@ export function createListFromTitle(titleValue) {
     createAddTodoButton(checkBox);
 
     // Create the todo line
-    createTodoLine(checkBox);
+    if (!titleValue){
+        createTodoLine(checkBox);
+    }
 
-    const percentage = percentageCompletion();
-    
+    let percentage = percentageCompletion();
+
+    if (titleValue && titleValue.lenght > 0){
+        listDiv.id = id;
+        percentage = percentageCompletion(percentageSaved)
+        todosSaved.forEach(todo => {
+            createTodoLine(checkBox, todo);
+        });
+        if ( checkboxState == "show"){
+            checkBox.classList.remove("hide");
+            checkBox.classList.add("show");
+        } else {
+            checkBox.classList.remove("show");
+            checkBox.classList.add("hide");
+        }
+    }
     title_box.append(new_title, dropdown);
-    listDiv.append(title_box, percentage, checkBox );
+    listDiv.append(title_box, percentage, checkBox);
     content.append(listDiv);
 
     setupDragAndDrop();
     setupTodoDragAndDrop(checkBox);
 }
 
-export function dropMenuBtn(options = {}){
+export function dropMenuBtn(options = {}) {
     const dropdown = document.createElement("div");
-    dropdown.classList.add("dropdown"); 
-    
+    dropdown.classList.add("dropdown");
+
     const option_btn = document.createElement("button");
     option_btn.classList.add("option_btn");
     option_btn.innerHTML = " ⋮ ";
@@ -133,12 +145,12 @@ export function dropMenuBtn(options = {}){
 
     // Always append delete first
     dropdown_menu.append(del_option);
-    
+
     // Conditionally append duplicate
     if (options.showDuplicate !== false) {
         dropdown_menu.append(duplicate_option);
     }
-    
+
     // Conditionally create and append add_to_folder
     if (options.showAddaFolder !== false) {
         const add_to_folder_option = document.createElement("a");
@@ -146,24 +158,24 @@ export function dropMenuBtn(options = {}){
         add_to_folder_option.innerHTML = "Add to a folder";
         dropdown_menu.append(add_to_folder_option);
     }
-    
+
     dropdown.append(option_btn, dropdown_menu);
-    
+
     return dropdown;
 }
 
-export function dropFolderMenuBtn(parent){
+export function dropFolderMenuBtn(parent) {
     const dropdown = parent.querySelector(".dropdown")
 
     let dropdownFoldersNames = dropdown.querySelector(".dropdownFoldersNames");
-    
-     if (!dropdownFoldersNames) {
+
+    if (!dropdownFoldersNames) {
         // Create it only once
         dropdownFoldersNames = document.createElement("div");
         dropdownFoldersNames.classList.add("dropdownFoldersNames");
         dropdown.append(dropdownFoldersNames);
-    }   
-    
+    }
+
     dropdownFoldersNames.innerHTML = "";
 
     const folderNames = document.querySelectorAll(".folderLists");
@@ -174,7 +186,7 @@ export function dropFolderMenuBtn(parent){
         folderLink.classList.add("folder-option");
         dropdownFoldersNames.append(folderLink);
     }
-    
+
     // Toggle show/hide
     if (dropdownFoldersNames.classList.contains("show")) {
         dropdownFoldersNames.classList.remove("show");
@@ -183,49 +195,68 @@ export function dropFolderMenuBtn(parent){
         dropdownFoldersNames.classList.remove("hide");
         dropdownFoldersNames.classList.add("show");
     }
-    
+
     return dropdown;
 }
 
 
-export function createTodoLine(checkBox, storeID){
+export function createTodoLine(checkBox, todo) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
     wrapper.draggable = true;
 
-    let todoId
-    if (storeID){
-        todoId = storeID;
-    } else {
-        todoId = generateId();
-    }
+
+    let todoId = generateId();
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.id = todoId;
     checkbox.classList.add("todo-checkbox");
 
-    const label = document.createElement("label");
+    let label = document.createElement("label");
     label.htmlFor = todoId;
     label.classList.add("todo-label");
 
-    const todoTextarea = document.createElement("textarea");
+    let todoTextarea = document.createElement("textarea");
     todoTextarea.classList.add("todo-text");
     todoTextarea.id = todoId;
     todoTextarea.placeholder = "To do : ...."
     todoTextarea.rows = 1;
     todoTextarea.classList.add("not-completed");
-    
+
     // Adjust input box size base on user type 
-    todoTextarea.addEventListener("input", function() {
+    todoTextarea.addEventListener("input", function () {
         this.style.height = "auto"; // â† 'this' is the textarea
         this.style.height = this.scrollHeight + "px";
     });
 
-    const delete_line_btn = deleteLineBtn();
+    let delete_line_btn = ""
+    if (!todo){
+        delete_line_btn = deleteLineBtn();
+    }
 
     const move_line_btn = moveLineBtn();
 
+    if (todo){
+        todoId = todo.id;
+        label.htmlFor = todoId;
+        todoTextarea.id = todoId;
+        todoTextarea.value = todo.text;
+
+        delete_line_btn = deleteLineBtn(todo);
+        
+        if ( todo.completed == "completed"){
+            checkbox.classList.remove("not-completed");
+            checkbox.classList.add("completed");
+            todoTextarea.classList.remove("not-completed");
+            todoTextarea.classList.add("completed");
+        } else {
+            checkbox.classList.remove("completed");
+            checkbox.classList.add("not-completed");
+            todoTextarea.classList.remove("completed");
+            todoTextarea.classList.add("not-completed");
+        }
+    }
     label.appendChild(todoTextarea);
     wrapper.append(checkbox, move_line_btn, label, delete_line_btn);
     checkBox.append(wrapper);
@@ -235,25 +266,38 @@ export function createTodoLine(checkBox, storeID){
     return wrapper;
 }
 
-export function moveLineBtn(){
+export function moveLineBtn() {
     const move_line_btn = document.createElement("button");
     move_line_btn.classList.add("move_line_btn");
     move_line_btn.innerText = " ⋮ ";
     return move_line_btn
 }
 
-export function deleteLineBtn(){
+export function deleteLineBtn(todo) {
+
     const delete_line_btn = document.createElement("button");
     delete_line_btn.classList.add("delete_line_btn");
     delete_line_btn.innerText = " X ";
-    delete_line_btn.classList.add("not-completed");
+
+    if (todo){
+        if ( todo.completed == "completed"){
+            delete_line_btn.classList.remove("not-completed");
+            delete_line_btn.classList.add("completed");
+        } else {
+            delete_line_btn.classList.remove("completed");
+            delete_line_btn.classList.add("not-completed");
+        }
+    } else{
+        delete_line_btn.classList.add("not-completed");
+    }
+   
     return delete_line_btn
 }
-function createAddTodoButton(checkBox){
+function createAddTodoButton(checkBox) {
     const addCheckLine = document.createElement("button");
     addCheckLine.classList.add("addCheckLine");
     addCheckLine.innerHTML = "+";
-    checkBox.append(addCheckLine);
+    checkBox.prepend(addCheckLine);
     return addCheckLine;
 }
 
@@ -264,10 +308,13 @@ export function addNewTodoLine(addButton) {
     setupTodoDragAndDrop(checkBox);
 }
 
-function percentageCompletion(){
+function percentageCompletion(percentageSaved) {
     const percentage = document.createElement("div");
     percentage.classList.add("percentage");
     percentage.innerHTML = "0% Done";
+    if (percentageSaved){
+        percentage.innerHTML = percentageSaved;
+    }
     return percentage;
 }
 
@@ -275,7 +322,7 @@ export function toggleTodoCompletion(checkbox) {
     const wrapper = checkbox.closest(".todo_line_wrapper");
     const textarea = wrapper.querySelector(".todo-text");
     const deleteBtn = wrapper.querySelector(".delete_line_btn");
-    
+
     if (checkbox.checked) {
         percentageCalculation(wrapper);
         textarea.classList.add("completed");
@@ -292,7 +339,7 @@ export function toggleTodoCompletion(checkbox) {
     percentageCalculation(wrapper);
 }
 
-export function percentageCalculation(wrapper){
+export function percentageCalculation(wrapper) {
     const listElement = wrapper.closest(".list");
     if (listElement) {
         const percentageElement = listElement.querySelector(".percentage");
@@ -300,24 +347,24 @@ export function percentageCalculation(wrapper){
             // Count all todos in THIS list only
             const allTodos = listElement.querySelectorAll(".todo-checkbox");
             const checkedTodos = listElement.querySelectorAll(".todo-checkbox:checked");
-            
+
             const totalCount = allTodos.length;
             const checkedCount = checkedTodos.length;
-            
+
             let calculePercentage = 0;
             if (totalCount > 0) {
                 calculePercentage = Math.round((checkedCount / totalCount) * 100);
             }
-            
+
             percentageElement.innerHTML = calculePercentage + "% Done";
 
-            if (calculePercentage === 100 && totalCount > 0){
+            if (calculePercentage === 100 && totalCount > 0) {
                 listElement.style.backgroundColor = "var(--color-checked-background)";
             } else {
                 listElement.style.backgroundColor = "var(--color-background)";
             }
         }
     }
-    
+
 }
 
