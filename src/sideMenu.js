@@ -1,23 +1,26 @@
-import { 
-    moveLineBtn ,
-    deleteLineBtn ,
+import {
     dropMenuBtn
-    } from "./create_list";
+} from "./create_list";
 
-import {generateId} from "./create_list";
+import { generateId } from "./create_list";
 
-import { sideMenuDragAndDrop, folderDragAndDrop } from "./draggable";
+import {
+    sideMenuDragAndDrop, folderDragAndDrop
+} from "./draggable";
+
 
 let count = 0;
 
-export function sideMenu(name){
+export function sideMenu(name) {
+    const storedUserFoldersData = localStorage.getItem("folders")
+
     const sideMenuToDoFolder = document.querySelector(".folderTitle");
 
     if (!sideMenuToDoFolder) {
         console.error("folderTitle not found in DOM");
         return;
     }
-    
+
     const divFolder = document.createElement("div");
     divFolder.classList.add("divFolder");
 
@@ -27,10 +30,14 @@ export function sideMenu(name){
     count++;
 
     const folderTitle = document.createElement("input");
-    folderTitle.classList.add("folderLists");    
-
+    folderTitle.classList.add("folderLists");
     divFolder.dataset.folderId = count;
-    if (name){
+
+    if (name && typeof name === 'object') {
+        folderTitle.value = name.folderName;
+        folderTitle.id = name.folderName;
+        divFolder.id = "div_Folder_" + name.folderName;
+    } else if (name && typeof name === 'string') {
         folderTitle.value = name;
         folderTitle.id = "Folder_" + name;
         divFolder.id = "div_Folder_" + name;
@@ -39,12 +46,12 @@ export function sideMenu(name){
         folderTitle.id = "Folder_" + count;
         divFolder.id = "div_Folder_" + count;
     }
-    
 
-    const dropDown = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });
+
+    const dropDown = dropMenuBtn({ showAddaFolder: false, showDuplicate: false });
 
     // Append both to the container, not dropdown inside input
-    folderHeader.append(dropDown , folderTitle)
+    folderHeader.append(dropDown, folderTitle)
     divFolder.append(folderHeader)
 
     sideMenuToDoFolder.append(divFolder);
@@ -53,9 +60,18 @@ export function sideMenu(name){
 
 }
 
-export function listNameInFolder(name , folderName){
-    const folderId = folderName.replace("Folder ", "");
-    const divFolder = document.getElementById("div_Folder_" + folderId);
+export function listNameInFolder(name, folderName) {
+
+    let folderId;
+    let divFolder;
+    if (name && typeof name === 'object') {
+        folderId = name.folderId;
+        divFolder = document.getElementById("div_" + folderId);
+    } else {
+        folderId = folderName.replace("Folder ", "");
+        divFolder = document.getElementById("div_Folder_" + folderId);
+
+    }
     // div_Folder_Shopping
     if (!divFolder) {
         console.error("Folder not found:", "div_Folder_" + folderId);
@@ -74,12 +90,18 @@ export function listNameInFolder(name , folderName){
     todoLine.classList.add("listName");
     todoLine.draggable = false;
     todoLine.id = name;
-    
-    const delete_line_btn = dropMenuBtn({ showAddaFolder: false , showDuplicate:false });
+
+    const delete_line_btn = dropMenuBtn({ showAddaFolder: false, showDuplicate: false });
 
     const todoText = document.createElement("input");
     todoText.classList.add("todoText");
-    todoText.value = name;
+    if (name && typeof name === 'object') {
+        for (let listElement of folderName){
+            todoText.value = listElement.listName;
+        }
+    } else {
+        todoText.value = name;
+    }
     todoText.id = generateId();
 
     todoLine.append(delete_line_btn, todoText);
@@ -89,3 +111,4 @@ export function listNameInFolder(name , folderName){
 
     folderDragAndDrop();
 }
+

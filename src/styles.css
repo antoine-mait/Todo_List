@@ -168,7 +168,7 @@ button {
     display: flex;
     flex-direction: row;
 }
-.subMenu , .subMenukCal {
+.subMenu , .subMenuKcal {
     padding: 12px 20px;
     text-align: left;
     margin: 0 0 8px 0;
@@ -181,7 +181,7 @@ button {
     transition: all var(--transition-fast);
 }
 
-.subMenu:hover , .subMenukCal:hover {
+.subMenu:hover , .subMenuKcal:hover {
     background-color: var(--color-bg-hover);
     color: var(--color-text-secondary);
 }

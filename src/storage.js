@@ -4,7 +4,8 @@ createListFromTitle
     from "./create_list.js";
 
 import {
-sideMenu
+sideMenu,
+listNameInFolder
 } from "./sideMenu.js";
 
 export function storeData() {
@@ -46,13 +47,13 @@ export function storeData() {
     let allFolders = [];
 
     for (let folderElement of toDoAppFolder) {
-        let folderName = folderElement.querySelector(".folderLists").value;
-
+        let folderName = folderElement.querySelector(".folderLists");
         const divFolder = folderElement.parentElement;
         const todosList = divFolder.querySelector(".listTodos")
 
         let folder = {
-            folderName: folderName,
+            folderName: folderName.value,
+            folderId: folderName.id,
             lists: []
         }
 
@@ -90,8 +91,13 @@ export function restoreData() {
 
     if (storedUserFoldersData) {
         const userFoldersData = JSON.parse(storedUserFoldersData)
-        userFoldersData.forEach(folders => {
-            sideMenu(folders)
+        userFoldersData.forEach(folder => {
+            sideMenu(folder);
+            if (folder.lists && folder.lists.length > 0){
+                folder.lists.forEach(list => {
+                    listNameInFolder(list.listName, folder.folderName);
+                });
+             }
         });
 
     }

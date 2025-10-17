@@ -65,8 +65,23 @@ export function duplicateOption(list , container){
 
     newTitle.value = baseName + "_copy_" + (maxCopy + 1);
 
+    const todoWrappers = cloneList.querySelectorAll(".todo_line_wrapper");
+    todoWrappers.forEach(wrapper => {
+        const newTodoId = generateId();
+        
+        const checkbox = wrapper.querySelector(".todo-checkbox");
+        const label = wrapper.querySelector(".todo-label");
+        const textarea = wrapper.querySelector(".todo-text");
+        
+        // Update all IDs and htmlFor attributes
+        checkbox.id = newTodoId;
+        label.htmlFor = newTodoId;
+        textarea.id = newTodoId;
+    });
+
     const addListBtn = container.querySelector("#add_list");
-    container.append(cloneList, addListBtn);
+    container.prepend(addListBtn)
+    container.append(cloneList);
 
     const dropdown_content = cloneList.querySelector(".dropdown_content");
     dropdown_content.classList.remove("show");

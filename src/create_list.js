@@ -202,7 +202,6 @@ export function createTodoLine(checkBox, todo) {
     wrapper.classList.add("todo_line_wrapper");
     wrapper.draggable = true;
 
-
     let todoId = generateId();
 
     const checkbox = document.createElement("input");
@@ -243,11 +242,13 @@ export function createTodoLine(checkBox, todo) {
         delete_line_btn = deleteLineBtn(todo);
         
         if ( todo.completed == "completed"){
+            checkbox.checked = true;
             checkbox.classList.remove("not-completed");
             checkbox.classList.add("completed");
             todoTextarea.classList.remove("not-completed");
             todoTextarea.classList.add("completed");
         } else {
+            checkbox.checked = false;
             checkbox.classList.remove("completed");
             checkbox.classList.add("not-completed");
             todoTextarea.classList.remove("completed");

@@ -23,17 +23,16 @@ import {
 import {
   storeData,
   restoreData,
-  deleteData
 } from "./storage.js";
 
 const listContainer = document.querySelector("#List_container")
 const storedUserData = localStorage.getItem("lists")
 
-if(storedUserData){
+if (storedUserData) {
   console.log("data restored")
   restoreData();
-}else{
-// Call initialization when DOM is ready
+} else {
+  // Call initialization when DOM is ready
   console.log("store data")
   initializeDefaultData();
 }
@@ -59,7 +58,7 @@ function initializeDefaultData() {
 
     // Create a sample list with todos
     createListFromTitle("Shopping List");
-    
+
     // Wait a tick for DOM to update, then add todos
     setTimeout(() => {
       const firstList = document.querySelector('.list');
@@ -92,7 +91,7 @@ function initializeDefaultData() {
         listNameInFolder("Shopping List", "Shopping");
       }
     }, 100);
-    
+
 
     // Create another list
     setTimeout(() => {
@@ -121,6 +120,7 @@ listContainer.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && e.target.id === "title") {
     e.preventDefault();
     document.querySelector("#create_list").click();
+    storeData();
   }
 });
 
@@ -200,12 +200,14 @@ document.addEventListener("click", (e) => {
   // Checkbox - marks todo as complete/incomplete
   if (e.target.classList.contains("todo-checkbox")) {
     toggleTodoCompletion(e.target);
+    storeData();
     return;
   }
 
   // "+" button - adds a new todo line
   if (e.target.classList.contains("addCheckLine")) {
     addNewTodoLine(e.target);
+    storeData();
     return;
   }
 
@@ -254,6 +256,7 @@ document.addEventListener("click", (e) => {
         duplicateOption(parent, container);
       }
     }
+    storeData();
     return;
   }
 
@@ -272,6 +275,7 @@ document.addEventListener("click", (e) => {
     if (parent) {
       deleteOption(parent);
     }
+    storeData();
     return;
   }
 
@@ -286,6 +290,7 @@ document.addEventListener("click", (e) => {
       }
       dropFolderMenuBtn(parent);
     }
+    storeData();
     return;
   }
   // Drop down menu on List
@@ -305,10 +310,11 @@ document.addEventListener("click", (e) => {
 
   // Side menu Add a Folder Button
   if (e.target.id == "AddAFolder") {
-    sideMenu()
+    sideMenu();
+    storeData();
   }
 
-  // To do Folders show 
+  // Todo Folders show 
   if (e.target.classList.contains("subMenu")) {
     const folders = document.querySelector(".folders");
     const listContainer = document.getElementById("List_container");
@@ -327,6 +333,17 @@ document.addEventListener("click", (e) => {
       folders.classList.add("show");
     }
 
+  }
+  if (e.target.classList.contains("subMenuKcal")) {
+    const listContainer = document.getElementById("List_container");
+    console.log("clcik")
+    if (listContainer.classList.contains("show")) {
+      listContainer.classList.add("hide");
+      listContainer.classList.remove("show");
+    } else {
+      listContainer.classList.remove("hide");
+      listContainer.classList.add("show");
+    }
   }
 
   // Hide Todo line by clicking on list 
@@ -347,7 +364,7 @@ document.addEventListener("click", (e) => {
       }
     }
   }
-
+  storeData();
 });
 
 
@@ -372,15 +389,15 @@ document.addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
-   if (e.ctrlKey && e.key === "s"){
-      e.preventDefault();
-      storeData();
-      console.log("save data")
-   }
-   if (e.ctrlKey && e.key === "d"){
-      e.preventDefault();
-      localStorage.clear()
-      console.log("delete data")
-   }
-  });
+  if (e.ctrlKey && e.key === "s") {
+    e.preventDefault();
+    storeData();
+    console.log("save data")
+  }
+  if (e.ctrlKey && e.key === "d") {
+    e.preventDefault();
+    localStorage.clear()
+    console.log("delete data")
+  }
+});
 
