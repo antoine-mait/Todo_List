@@ -30,7 +30,6 @@ export function sideMenu(name){
     folderTitle.classList.add("folderLists");    
 
     divFolder.dataset.folderId = count;
-    
     if (name){
         folderTitle.value = name;
         folderTitle.id = "Folder_" + name;
@@ -81,7 +80,7 @@ export function listNameInFolder(name , folderName){
     const todoText = document.createElement("input");
     todoText.classList.add("todoText");
     todoText.value = name;
-    todoText.id = "TodoName_" + generateId();
+    todoText.id = generateId();
 
     todoLine.append(delete_line_btn, todoText);
     ulListTodo.append(todoLine);
