@@ -160,9 +160,7 @@ document.addEventListener("click", (e) => {
         listBox.remove();
       }
       createAddListButton();
-      storeData();
     }
-    return;
   }
 
   // "Cancel" button - closes list creation box
@@ -172,7 +170,6 @@ document.addEventListener("click", (e) => {
       listBox.remove();
     }
     createAddListButton();
-    return;
   }
 
   // "X" button - deletes a todo line
@@ -194,21 +191,16 @@ document.addEventListener("click", (e) => {
         }
       }
     }
-    return;
   }
 
   // Checkbox - marks todo as complete/incomplete
   if (e.target.classList.contains("todo-checkbox")) {
     toggleTodoCompletion(e.target);
-    storeData();
-    return;
   }
 
   // "+" button - adds a new todo line
   if (e.target.classList.contains("addCheckLine")) {
     addNewTodoLine(e.target);
-    storeData();
-    return;
   }
 
   // Option button dropDown menu
@@ -237,7 +229,6 @@ document.addEventListener("click", (e) => {
         dropdown_content.classList.add("show");
       }
     }
-    return;
   }
 
   // Duplicate list
@@ -256,8 +247,6 @@ document.addEventListener("click", (e) => {
         duplicateOption(parent, container);
       }
     }
-    storeData();
-    return;
   }
 
   // Delete list or folder
@@ -267,7 +256,6 @@ document.addEventListener("click", (e) => {
     if (listNameParent) {
       // Just remove the list item from the folder
       listNameParent.remove();
-      return; // Exit early, don't proceed to folder/list deletion
     }
 
     // If not a side menu list item, proceed with normal deletion
@@ -275,8 +263,6 @@ document.addEventListener("click", (e) => {
     if (parent) {
       deleteOption(parent);
     }
-    storeData();
-    return;
   }
 
   // Add to a folder
@@ -290,8 +276,6 @@ document.addEventListener("click", (e) => {
       }
       dropFolderMenuBtn(parent);
     }
-    storeData();
-    return;
   }
   // Drop down menu on List
   if (e.target.classList.contains("folder-option")) {
@@ -311,7 +295,6 @@ document.addEventListener("click", (e) => {
   // Side menu Add a Folder Button
   if (e.target.id == "AddAFolder") {
     sideMenu();
-    storeData();
   }
 
   // Todo Folders show 

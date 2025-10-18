@@ -4,7 +4,8 @@ import {
 } from "./draggable.js";
 
 import {
-    Todo
+    Todo,
+    List
 } from "./class_constructor.js"
 
 const storedUserData = localStorage.getItem('lists')
@@ -73,16 +74,17 @@ export function createListFromTitle(titleValue, id, checkboxState, percentageSav
         return;
     }
 
+    const list = new List(titleValue, id, checkboxState, percentageSaved, todosSaved);
+    
     const listDiv = document.createElement("div");
     listDiv.classList.add("list");
-    const listId = generateId();
-    listDiv.id = listId;
+    listDiv.id = list.id;
     listDiv.draggable = true;
 
     const new_title = document.createElement("input");
     new_title.classList.add("new_title");
     new_title.id = generateId();
-    new_title.value = titleValue;
+    new_title.value = list.title;
     new_title.addEventListener("focus", function () {
         this.select();
     });
@@ -99,24 +101,16 @@ export function createListFromTitle(titleValue, id, checkboxState, percentageSav
     // Create the + button , to create new todo 
     createAddTodoButton(checkBox);
 
-    let percentage = percentageCompletion();
+    let percentage = percentageCompletion(list.getCompletionPercentage() + " % Done");
 
-    if (todosSaved  && todosSaved.length > 0){
-        listDiv.id = id;
-        percentage = percentageCompletion(percentageSaved)
-        todosSaved.forEach(todo => {
+    if (list.todos  && list.todos.length > 0){
+        list.todos.forEach(todo => {
             createTodoLine(checkBox, todo);
         });
-        if ( checkboxState == "show"){
-            checkBox.classList.remove("hide");
-            checkBox.classList.add("show");
-        } else {
-            checkBox.classList.remove("show");
-            checkBox.classList.add("hide");
-        }
     } else {
         createTodoLine(checkBox);
     }
+
     title_box.append(new_title, dropdown);
     listDiv.append(title_box, percentage, checkBox);
     content.append(listDiv);
@@ -203,9 +197,20 @@ export function dropFolderMenuBtn(parent) {
 
 export function createTodoLine(checkBox, todoData) {
 
-    const todo = todoData ? 
-        new Todo(todoData.text , todoData.id , todoData.completed === "completed") :
-        new Todo("", null , false);
+     let todo;
+    if (todoData instanceof Todo) {
+        todo = todoData;  // Use it directly!
+    } else if (todoData) {
+        // Plain object - convert it
+        todo = new Todo(
+            todoData.text,
+            todoData.id,
+            todoData.completed === "completed"
+        );
+    } else {
+        // No data - create empty
+        todo = new Todo("", null, false);
+    }
 
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
@@ -273,15 +278,9 @@ export function deleteLineBtn(todo) {
     delete_line_btn.classList.add("delete_line_btn");
     delete_line_btn.innerText = " X ";
 
-    if (todo){
-        if ( todo.completed == "completed"){
-            delete_line_btn.classList.remove("not-completed");
-            delete_line_btn.classList.add("completed");
-        } else {
-            delete_line_btn.classList.remove("completed");
-            delete_line_btn.classList.add("not-completed");
-        }
-    } else{
+    if (todo && todo.completed){
+        delete_line_btn.classList.add("completed");
+    } else {
         delete_line_btn.classList.add("not-completed");
     }
    

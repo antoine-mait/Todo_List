@@ -9,70 +9,51 @@ import {
 } from "./draggable";
 
 
+import {
+    Folder
+} from "./class_constructor.js"
+
 let count = 0;
 
-export function sideMenu(name) {
-    const storedUserFoldersData = localStorage.getItem("folders")
-
+export function sideMenu(nameOrObject) {
+    const folder = new Folder(nameOrObject);
+    
     const sideMenuToDoFolder = document.querySelector(".folderTitle");
-
     if (!sideMenuToDoFolder) {
         console.error("folderTitle not found in DOM");
         return;
     }
 
+    // Create DOM elements
     const divFolder = document.createElement("div");
     divFolder.classList.add("divFolder");
+    divFolder.id = `div_${folder.id}`;
 
     const folderHeader = document.createElement("div");
     folderHeader.classList.add("folderHeader");
 
-    count++;
-
     const folderTitle = document.createElement("input");
     folderTitle.classList.add("folderLists");
-    divFolder.dataset.folderId = count;
-
-    if (name && typeof name === 'object') {
-        folderTitle.value = name.folderName;
-        folderTitle.id = name.folderName;
-        divFolder.id = "div_Folder_" + name.folderName;
-    } else if (name && typeof name === 'string') {
-        folderTitle.value = name;
-        folderTitle.id = "Folder_" + name;
-        divFolder.id = "div_Folder_" + name;
-    } else {
-        folderTitle.value = "Folder " + count;
-        folderTitle.id = "Folder_" + count;
-        divFolder.id = "div_Folder_" + count;
-    }
-
+    folderTitle.value = folder.name;
+    folderTitle.id = folder.id;
 
     const dropDown = dropMenuBtn({ showAddaFolder: false, showDuplicate: false });
 
-    // Append both to the container, not dropdown inside input
-    folderHeader.append(dropDown, folderTitle)
-    divFolder.append(folderHeader)
-
+    folderHeader.append(dropDown, folderTitle);
+    divFolder.append(folderHeader);
+    
     sideMenuToDoFolder.append(divFolder);
-
+    
     folderDragAndDrop();
-
+    
+    return folder;  // Return the folder instance
 }
 
-export function listNameInFolder(name, folderName) {
+export function listNameInFolder(listName, folderNameOrId) {
 
-    let folderId;
-    let divFolder;
-    if (name && typeof name === 'object') {
-        folderId = name.folderId;
-        divFolder = document.getElementById("div_" + folderId);
-    } else {
-        folderId = folderName.replace("Folder ", "");
-        divFolder = document.getElementById("div_Folder_" + folderId);
+    const folderId = folderNameOrId.replace("Folder ", "");
+    const divFolder = document.getElementById("div_Folder_" + folderId);
 
-    }
-    // div_Folder_Shopping
     if (!divFolder) {
         console.error("Folder not found:", "div_Folder_" + folderId);
         return;
@@ -89,19 +70,13 @@ export function listNameInFolder(name, folderName) {
     const todoLine = document.createElement("li");
     todoLine.classList.add("listName");
     todoLine.draggable = false;
-    todoLine.id = name;
+    todoLine.id = listName;
 
     const delete_line_btn = dropMenuBtn({ showAddaFolder: false, showDuplicate: false });
 
     const todoText = document.createElement("input");
     todoText.classList.add("todoText");
-    if (name && typeof name === 'object') {
-        for (let listElement of folderName){
-            todoText.value = listElement.listName;
-        }
-    } else {
-        todoText.value = name;
-    }
+    todoText.value = listName;
     todoText.id = generateId();
 
     todoLine.append(delete_line_btn, todoText);
