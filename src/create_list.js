@@ -3,6 +3,10 @@ import {
     setupTodoDragAndDrop
 } from "./draggable.js";
 
+import {
+    Todo
+} from "./class_constructor.js"
+
 const storedUserData = localStorage.getItem('lists')
 
 const content = document.querySelector("#List_container");
@@ -197,27 +201,31 @@ export function dropFolderMenuBtn(parent) {
 }
 
 
-export function createTodoLine(checkBox, todo) {
+export function createTodoLine(checkBox, todoData) {
+
+    const todo = todoData ? 
+        new Todo(todoData.text , todoData.id , todoData.completed === "completed") :
+        new Todo("", null , false);
+
     const wrapper = document.createElement("div");
     wrapper.classList.add("todo_line_wrapper");
     wrapper.draggable = true;
 
-    let todoId = generateId();
-
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = todoId;
+    checkbox.id = todo.id;
     checkbox.classList.add("todo-checkbox");
 
     let label = document.createElement("label");
-    label.htmlFor = todoId;
+    label.htmlFor = todo.id;
     label.classList.add("todo-label");
 
     let todoTextarea = document.createElement("textarea");
     todoTextarea.classList.add("todo-text");
-    todoTextarea.id = todoId;
+    todoTextarea.id = todo.id;
     todoTextarea.placeholder = "To do : ...."
     todoTextarea.rows = 1;
+    todoTextarea.value = todo.text;
     todoTextarea.classList.add("not-completed");
 
     // Adjust input box size base on user type 
@@ -226,35 +234,23 @@ export function createTodoLine(checkBox, todo) {
         this.style.height = this.scrollHeight + "px";
     });
 
-    let delete_line_btn = ""
-    if (!todo){
-        delete_line_btn = deleteLineBtn();
-    }
-
     const move_line_btn = moveLineBtn();
-
-    if (todo){
-        todoId = todo.id;
-        label.htmlFor = todoId;
-        todoTextarea.id = todoId;
-        todoTextarea.value = todo.text;
-
-        delete_line_btn = deleteLineBtn(todo);
-        
-        if ( todo.completed == "completed"){
-            checkbox.checked = true;
-            checkbox.classList.remove("not-completed");
-            checkbox.classList.add("completed");
-            todoTextarea.classList.remove("not-completed");
-            todoTextarea.classList.add("completed");
-        } else {
-            checkbox.checked = false;
-            checkbox.classList.remove("completed");
-            checkbox.classList.add("not-completed");
-            todoTextarea.classList.remove("completed");
-            todoTextarea.classList.add("not-completed");
-        }
+    let delete_line_btn = deleteLineBtn(todo);
+    
+    if (todo.completed){
+        checkbox.checked = true;
+        checkbox.classList.remove("not-completed");
+        checkbox.classList.add("completed");
+        todoTextarea.classList.remove("not-completed");
+        todoTextarea.classList.add("completed");
+    } else {
+        checkbox.checked = false;
+        checkbox.classList.remove("completed");
+        checkbox.classList.add("not-completed");
+        todoTextarea.classList.remove("completed");
+        todoTextarea.classList.add("not-completed");
     }
+    
     label.appendChild(todoTextarea);
     wrapper.append(checkbox, move_line_btn, label, delete_line_btn);
     checkBox.append(wrapper);
