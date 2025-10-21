@@ -144,6 +144,23 @@ function getDropdownParent(element) {
 
 document.addEventListener("click", (e) => {
 
+  if (e.target.classList.contains("dropDownMenu")) {
+    const sideMenu = document.querySelector(".sideMenu");
+    
+    // Toggle the 'open' class
+    if (sideMenu.classList.contains("open")) {
+      sideMenu.classList.add("hide");
+      sideMenu.classList.remove("show");
+      sideMenu.classList.remove("open");
+      listContainer.classList.add("full-width");
+    } else {
+      sideMenu.classList.add("open");
+      sideMenu.classList.remove("hide");
+      sideMenu.classList.add("show");
+      listContainer.classList.remove("full-width");
+    }
+    return;
+  }
   // "Add List" button - shows the list creation box
   if (e.target && e.target.id === "add_list") {
     createList();
